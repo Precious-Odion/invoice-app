@@ -1,0 +1,227 @@
+.invoice-drawer {
+  position: fixed;
+  inset: 103px 0 0 103px;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.invoice-drawer__panel {
+  width: min(100%, 719px);
+  height: calc(100vh - 103px);
+  background-color: var(--color-bg);
+  border-radius: 0 20px 20px 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.invoice-drawer__scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 56px 56px 32px;
+}
+
+.invoice-drawer__title {
+  font-size: 32px;
+  margin-bottom: 48px;
+}
+
+.invoice-drawer__id {
+  color: var(--color-text-muted);
+}
+
+.invoice-form {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.invoice-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.invoice-form__section-title {
+  font-size: 15px;
+  color: var(--color-purple-primary);
+}
+
+.invoice-form__items-title {
+  font-size: 18px;
+  color: #777f98;
+}
+
+.invoice-form__row {
+  display: grid;
+  gap: 24px;
+}
+
+.invoice-form__row--triple {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.invoice-form__row--double {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.invoice-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.invoice-form__field label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.invoice-form__field input,
+.invoice-form__field select {
+  width: 100%;
+  height: 48px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.invoice-form__field input:focus,
+.invoice-form__field select:focus {
+  outline: none;
+  border-color: var(--color-purple-primary);
+}
+
+.invoice-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.invoice-items__header,
+.invoice-items__row {
+  display: grid;
+  grid-template-columns: 1fr 64px 100px 100px 32px;
+  gap: 16px;
+  align-items: center;
+}
+
+.invoice-items__header {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.invoice-items__row input {
+  height: 48px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 0 12px;
+  font-weight: 700;
+}
+
+.invoice-items__row p {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+.invoice-items__delete {
+  color: #888eb0;
+  font-size: 16px;
+}
+
+.invoice-form__add-item {
+  width: 100%;
+  height: 48px;
+  border-radius: 999px;
+  background-color: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  font-weight: 700;
+}
+
+.invoice-form__add-item:hover {
+  opacity: 0.85;
+}
+
+.invoice-drawer__footer {
+  padding: 24px 56px;
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-radius: 0 0 20px 0;
+}
+
+.invoice-drawer__footer-right {
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 1024px) {
+  .invoice-drawer {
+    inset: 72px 0 0 0;
+  }
+
+  .invoice-drawer__panel {
+    height: calc(100vh - 72px);
+  }
+}
+
+@media (max-width: 767px) {
+  .invoice-drawer {
+    inset: 72px 0 0 0;
+  }
+
+  .invoice-drawer__panel {
+    width: 100%;
+    height: calc(100vh - 72px);
+    border-radius: 0;
+  }
+
+  .invoice-drawer__scroll {
+    padding: 32px 24px 120px;
+  }
+
+  .invoice-form__row--triple,
+  .invoice-form__row--double {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .invoice-form__row--triple .invoice-form__field:last-child,
+  .invoice-form__field--full {
+    grid-column: 1 / -1;
+  }
+
+  .invoice-items__header {
+    display: none;
+  }
+
+  .invoice-items__row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+
+  .invoice-items__row p {
+    text-align: left;
+  }
+
+  .invoice-drawer__footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px 24px;
+    border-radius: 0;
+  }
+
+  .invoice-drawer__footer-right {
+    margin-left: auto;
+  }
+}

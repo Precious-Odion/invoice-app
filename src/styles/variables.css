@@ -17,6 +17,7 @@
   --color-draft: #373b53;
   --color-draft-bg: rgba(55, 59, 83, 0.12);
   --color-shadow: rgba(72, 84, 159, 0.1);
+  --color-overlay: rgba(0, 0, 0, 0.45);
 
   --font-family: 'League Spartan', sans-serif;
 
@@ -40,3 +41,4 @@ body.dark {
   --color-draft: #dfe3fa;
   --color-draft-bg: rgba(223, 227, 250, 0.08);
 }
+

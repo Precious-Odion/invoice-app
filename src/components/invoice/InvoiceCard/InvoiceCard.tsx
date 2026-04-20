@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Invoice } from "../../../types/invoice";
 import { formatCurrency } from "../../../utils/formatCurrency";
 import { formatDate } from "../../../utils/formatDate";
@@ -10,7 +11,7 @@ interface InvoiceCardProps {
 
 export function InvoiceCard({ invoice }: InvoiceCardProps) {
   return (
-    <article className="invoice-card" tabIndex={0}>
+    <Link to={`/invoice/${invoice.id}`} className="invoice-card">
       <div className="invoice-card__group invoice-card__group--left">
         <p className="invoice-card__id">
           <span className="invoice-card__hash">#</span>
@@ -32,6 +33,6 @@ export function InvoiceCard({ invoice }: InvoiceCardProps) {
           ›
         </span>
       </div>
-    </article>
+    </Link>
   );
 }

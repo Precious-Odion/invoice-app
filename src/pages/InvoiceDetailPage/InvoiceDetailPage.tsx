@@ -1,0 +1,129 @@
+import { Link } from "react-router-dom";
+import { Button } from "../../components/common/Button/Button";
+import { Modal } from "../../components/common/Modal/Modal";
+import { InvoiceStatusBadge } from "../../components/invoice/InvoiceStatusBadge/InvoiceStatusBadge";
+import { AppShell } from "../../components/layout/AppShell/AppShell";
+import { seedInvoices } from "../../data/seedInvoices";
+import { formatCurrency } from "../../utils/formatCurrency";
+import { formatDate } from "../../utils/formatDate";
+import "./InvoiceDetailPage.css";
+
+export function InvoiceDetailPage() {
+  const invoice = seedInvoices[1];
+
+  return (
+    <AppShell>
+      <section className="invoice-detail-page page-container">
+        <Link to="/" className="invoice-detail-page__back-link">
+          ‹ Go back
+        </Link>
+
+        <div className="invoice-detail-page__status-bar">
+          <div className="invoice-detail-page__status-left">
+            <span className="invoice-detail-page__status-label">Status</span>
+            <InvoiceStatusBadge status={invoice.status} />
+          </div>
+
+          <div className="invoice-detail-page__actions">
+            <Link to={`/invoice/${invoice.id}/edit`}>
+              <Button variant="secondary">Edit</Button>
+            </Link>
+            <Button variant="danger">Delete</Button>
+            <Button variant="primary">Mark as Paid</Button>
+          </div>
+        </div>
+
+        <article className="invoice-detail-card">
+          <header className="invoice-detail-card__header">
+            <div>
+              <h1 className="invoice-detail-card__id">
+                <span>#</span>
+                {invoice.id}
+              </h1>
+              <p className="invoice-detail-card__description">
+                {invoice.description}
+              </p>
+            </div>
+
+            <address className="invoice-detail-card__address">
+              <p>{invoice.senderAddress.street}</p>
+              <p>{invoice.senderAddress.city}</p>
+              <p>{invoice.senderAddress.postCode}</p>
+              <p>{invoice.senderAddress.country}</p>
+            </address>
+          </header>
+
+          <section className="invoice-detail-card__body">
+            <div>
+              <p className="invoice-detail-card__label">Invoice Date</p>
+              <p className="invoice-detail-card__value">
+                {formatDate(invoice.createdAt)}
+              </p>
+
+              <p className="invoice-detail-card__label invoice-detail-card__label--spaced">
+                Payment Due
+              </p>
+              <p className="invoice-detail-card__value">
+                {formatDate(invoice.paymentDue)}
+              </p>
+            </div>
+
+            <div>
+              <p className="invoice-detail-card__label">Bill To</p>
+              <p className="invoice-detail-card__value">{invoice.clientName}</p>
+              <address className="invoice-detail-card__sub-address">
+                <p>{invoice.clientAddress.street}</p>
+                <p>{invoice.clientAddress.city}</p>
+                <p>{invoice.clientAddress.postCode}</p>
+                <p>{invoice.clientAddress.country}</p>
+              </address>
+            </div>
+
+            <div>
+              <p className="invoice-detail-card__label">Sent to</p>
+              <p className="invoice-detail-card__value">
+                {invoice.clientEmail}
+              </p>
+            </div>
+          </section>
+
+          <section className="invoice-detail-card__items">
+            <div className="invoice-detail-card__table-head">
+              <span>Item Name</span>
+              <span>QTY.</span>
+              <span>Price</span>
+              <span>Total</span>
+            </div>
+
+            {invoice.items.map((item) => (
+              <div className="invoice-detail-card__table-row" key={item.id}>
+                <span>{item.name}</span>
+                <span>{item.quantity}</span>
+                <span>{formatCurrency(item.price)}</span>
+                <span>{formatCurrency(item.total)}</span>
+              </div>
+            ))}
+
+            <div className="invoice-detail-card__total-row">
+              <span>Amount Due</span>
+              <strong>{formatCurrency(invoice.total)}</strong>
+            </div>
+          </section>
+        </article>
+
+        <Modal
+          title="Confirm Deletion"
+          actions={
+            <>
+              <Button variant="secondary">Cancel</Button>
+              <Button variant="danger">Delete</Button>
+            </>
+          }
+        >
+          Are you sure you want to delete invoice #{invoice.id}? This action
+          cannot be undone.
+        </Modal>
+      </section>
+    </AppShell>
+  );
+}

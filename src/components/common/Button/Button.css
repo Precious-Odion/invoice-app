@@ -3,7 +3,9 @@
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
+  padding-inline: 24px;
   font-size: 15px;
   font-weight: 700;
   transition:
@@ -30,6 +32,33 @@
 
 .button--ghost:hover {
   opacity: 0.75;
+}
+
+.button--secondary {
+  background-color: var(--color-surface-2);
+  color: var(--color-text-secondary);
+}
+
+.button--secondary:hover {
+  opacity: 0.85;
+}
+
+.button--danger {
+  background-color: #ec5757;
+  color: #ffffff;
+}
+
+.button--danger:hover {
+  background-color: #ff9797;
+}
+
+.button--light {
+  background-color: #ffffff;
+  color: #7e88c3;
+}
+
+.button--light:hover {
+  background-color: #dfe3fa;
 }
 
 .button__icon {
