@@ -1,0 +1,60 @@
+.invoice-card {
+  width: 100%;
+  background-color: var(--color-surface);
+  border-radius: 8px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.invoice-card:hover {
+  border-color: var(--color-purple-primary);
+}
+
+/* LEFT GROUP */
+.invoice-card__group--left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.invoice-card__id {
+  font-weight: 700;
+  min-width: 70px;
+}
+
+.invoice-card__hash {
+  color: var(--color-text-muted);
+}
+
+.invoice-card__due-date {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.invoice-card__client-name {
+  color: var(--color-text-muted);
+  min-width: 120px;
+}
+
+/* RIGHT GROUP */
+.invoice-card__group--right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.invoice-card__amount {
+  font-weight: 700;
+  min-width: 120px;
+  text-align: right;
+}
+
+.invoice-card__arrow {
+  color: var(--color-purple-primary);
+  font-size: 22px;
+}

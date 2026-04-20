@@ -3,17 +3,22 @@
 }
 
 .app-shell__content {
-  padding-top: 175px;
-  padding-left: 159px;
-  padding-right: 48px;
-  padding-bottom: 48px;
+  padding-top: 140px;
+  padding-left: 160px;
+  padding-right: 40px;
+}
+
+@media (max-width: 1024px) {
+  .app-shell__content {
+    padding-left: 0;
+    padding-top: 120px;
+    padding-inline: 32px;
+  }
 }
 
 @media (max-width: 767px) {
   .app-shell__content {
-    padding-top: 32px;
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 56px;
+    padding-top: 104px;
+    padding-inline: 24px;
   }
 }
