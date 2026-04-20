@@ -1,0 +1,19 @@
+.filter-dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  transition: opacity var(--transition-fast);
+}
+
+.filter-dropdown:hover {
+  opacity: 0.75;
+}
+
+.filter-dropdown__arrow {
+  color: var(--color-purple-primary);
+  font-size: 16px;
+  transform: translateY(-1px);
+}

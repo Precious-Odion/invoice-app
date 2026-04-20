@@ -29,3 +29,9 @@ body {
   border: 0;
   clip: rect(0, 0, 0, 0);
 }
+
+@media (min-width: 1440px) {
+  .page-container {
+    width: min(100%, 1110px);
+  }
+}

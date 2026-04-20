@@ -1,0 +1,45 @@
+.invoice-status-badge {
+  min-width: 104px;
+  min-height: 40px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 18px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.invoice-status-badge__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.invoice-status-badge--paid {
+  background-color: var(--color-paid-bg);
+  color: var(--color-paid);
+}
+
+.invoice-status-badge--paid .invoice-status-badge__dot {
+  background-color: var(--color-paid);
+}
+
+.invoice-status-badge--pending {
+  background-color: var(--color-pending-bg);
+  color: var(--color-pending);
+}
+
+.invoice-status-badge--pending .invoice-status-badge__dot {
+  background-color: var(--color-pending);
+}
+
+.invoice-status-badge--draft {
+  background-color: var(--color-draft-bg);
+  color: var(--color-draft);
+}
+
+.invoice-status-badge--draft .invoice-status-badge__dot {
+  background-color: var(--color-draft);
+}
