@@ -1,0 +1,184 @@
+.invoice-list-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.invoice-list-page__title {
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -1.13px;
+  margin-bottom: 8px;
+}
+
+.invoice-list-page__subtitle {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+}
+
+.invoice-list-page__actions {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.invoice-list-page__filter-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.invoice-list-page__filter-arrow {
+  color: var(--color-purple-primary);
+  font-size: 16px;
+  transform: translateY(-1px);
+}
+
+.invoice-list-page__new-button {
+  height: 48px;
+  padding: 8px 16px 8px 8px;
+  border-radius: 999px;
+  background-color: var(--color-purple-primary);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  transition:
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.invoice-list-page__new-button:hover {
+  background-color: var(--color-purple-secondary);
+}
+
+.invoice-list-page__new-button-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: white;
+  color: var(--color-purple-primary);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.invoice-list-page__empty-state {
+  min-height: 65vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 40px;
+}
+
+.invoice-list-page__illustration {
+  position: relative;
+  width: 240px;
+  height: 200px;
+  margin-bottom: 48px;
+}
+
+.invoice-list-page__illustration-envelope {
+  position: absolute;
+  bottom: 0;
+  left: 30px;
+  width: 180px;
+  height: 120px;
+  border: 2px solid rgba(126, 136, 195, 0.35);
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewY(-2deg);
+}
+
+.invoice-list-page__illustration-envelope::before,
+.invoice-list-page__illustration-envelope::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-top: 2px solid rgba(126, 136, 195, 0.35);
+  transform-origin: center;
+}
+
+.invoice-list-page__illustration-envelope::before {
+  transform: skewY(0deg) rotate(32deg);
+}
+
+.invoice-list-page__illustration-envelope::after {
+  transform: skewY(0deg) rotate(-32deg);
+}
+
+.invoice-list-page__illustration-person {
+  position: absolute;
+  left: 78px;
+  top: 10px;
+  width: 84px;
+  height: 120px;
+  background: linear-gradient(
+    to bottom,
+    rgba(124, 93, 250, 0.95) 0%,
+    rgba(124, 93, 250, 0.95) 70%,
+    #111 70%,
+    #111 100%
+  );
+  border-radius: 36px 36px 20px 20px;
+}
+
+.invoice-list-page__empty-title {
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: -0.75px;
+  margin-bottom: 24px;
+}
+
+.invoice-list-page__empty-text {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.15;
+  max-width: 210px;
+}
+
+.invoice-list-page__empty-text strong {
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .invoice-list-page__header {
+    gap: 16px;
+  }
+
+  .invoice-list-page__actions {
+    gap: 18px;
+  }
+
+  .invoice-list-page__filter-button {
+    font-size: 15px;
+  }
+
+  .invoice-list-page__new-button {
+    padding-right: 14px;
+  }
+
+  .invoice-list-page__new-button span:last-child {
+    font-size: 0;
+  }
+
+  .invoice-list-page__new-button span:last-child::after {
+    content: 'New';
+    font-size: 15px;
+  }
+
+  .invoice-list-page__empty-state {
+    min-height: 60vh;
+  }
+}

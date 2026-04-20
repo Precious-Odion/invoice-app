@@ -1,0 +1,42 @@
+:root {
+  --color-purple-primary: #7c5dfa;
+  --color-purple-secondary: #9277ff;
+  --color-bg: #f8f8fb;
+  --color-surface: #ffffff;
+  --color-surface-2: #dfe3fa;
+  --color-text-primary: #0c0e16;
+  --color-text-secondary: #888eb0;
+  --color-text-muted: #7e88c3;
+  --color-nav: #373b53;
+  --color-nav-accent: #494e6e;
+  --color-border: #dfe3fa;
+  --color-paid: #33d69f;
+  --color-paid-bg: rgba(51, 214, 159, 0.12);
+  --color-pending: #ff8f00;
+  --color-pending-bg: rgba(255, 143, 0, 0.12);
+  --color-draft: #373b53;
+  --color-draft-bg: rgba(55, 59, 83, 0.12);
+  --color-shadow: rgba(72, 84, 159, 0.1);
+
+  --font-family: 'League Spartan', sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 20px;
+  --radius-lg: 24px;
+
+  --transition-fast: 0.2s ease;
+}
+
+body.dark {
+  --color-bg: #141625;
+  --color-surface: #1e2139;
+  --color-surface-2: #252945;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #dfe3fa;
+  --color-text-muted: #888eb0;
+  --color-nav: #1e2139;
+  --color-nav-accent: #252945;
+  --color-border: #252945;
+  --color-draft: #dfe3fa;
+  --color-draft-bg: rgba(223, 227, 250, 0.08);
+}
