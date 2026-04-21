@@ -425,6 +425,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 <label htmlFor="clientName">Client&apos;s Name</label>
                 <input
                   id="clientName"
+                  placeholder="e.g. John Doe"
                   className={
                     errors.clientName ? "invoice-form__input--error" : ""
                   }
@@ -442,6 +443,8 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 <label htmlFor="clientEmail">Client&apos;s Email</label>
                 <input
                   id="clientEmail"
+                  type="email"
+                  placeholder="e.g. email@example.com"
                   className={
                     errors.clientEmail ? "invoice-form__input--error" : ""
                   }
@@ -588,6 +591,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 <label htmlFor="projectDescription">Project Description</label>
                 <input
                   id="projectDescription"
+                  placeholder="e.g. App Development Service"
                   className={
                     errors.description ? "invoice-form__input--error" : ""
                   }

@@ -265,3 +265,8 @@
 .invoice-items__row input.invoice-form__input--error {
   border-color: #ec5757;
 }
+
+.invoice-form input::placeholder {
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+}
