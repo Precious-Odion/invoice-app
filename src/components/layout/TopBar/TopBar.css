@@ -20,7 +20,6 @@
 }
 
 .topbar__theme-button {
-  color: #7e88c3;
   transition: opacity var(--transition-fast);
 }
 
@@ -29,15 +28,19 @@
 }
 
 .topbar__theme-icon {
+  position: relative;
+  display: block;
+}
+
+.topbar__theme-icon--dark {
   width: 20px;
   height: 20px;
   background-color: #7e88c3;
   border-radius: 50%;
-  position: relative;
 }
 
-.topbar__theme-icon::after {
-  content: '';
+.topbar__theme-icon--dark::after {
+  content: "";
   position: absolute;
   top: -1px;
   right: -1px;
@@ -45,6 +48,18 @@
   height: 12px;
   background-color: var(--color-nav);
   border-radius: 50%;
+}
+
+.topbar__theme-icon--light {
+  width: 20px;
+  height: 20px;
+  background-color: #7e88c3;
+  border-radius: 50%;
+  box-shadow:
+    0 -10px 0 -8px #7e88c3,
+    0 10px 0 -8px #7e88c3,
+    10px 0 0 -8px #7e88c3,
+    -10px 0 0 -8px #7e88c3;
 }
 
 .topbar__divider {

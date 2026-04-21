@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useInvoices } from "../../context/InvoiceContext";
 import { Button } from "../../components/common/Button/Button";
 import { Modal } from "../../components/common/Modal/Modal";
 import { InvoiceStatusBadge } from "../../components/invoice/InvoiceStatusBadge/InvoiceStatusBadge";
 import { AppShell } from "../../components/layout/AppShell/AppShell";
-import { seedInvoices } from "../../data/seedInvoices";
 import { formatCurrency } from "../../utils/formatCurrency";
 import { formatDate } from "../../utils/formatDate";
 import "./InvoiceDetailPage.css";
@@ -12,12 +12,10 @@ import "./InvoiceDetailPage.css";
 export function InvoiceDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getInvoiceById } = useInvoices();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const invoice = useMemo(
-    () => seedInvoices.find((item) => item.id === id),
-    [id],
-  );
+  const invoice = id ? getInvoiceById(id) : undefined;
 
   if (!invoice) {
     return (

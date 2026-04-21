@@ -1,16 +1,22 @@
 import { useNavigate } from "react-router-dom";
+import { useInvoices } from "../../context/InvoiceContext";
 import { Button } from "../../components/common/Button/Button";
 import { EmptyState } from "../../components/common/EmptyState/EmptyState";
 import { FilterDropdown } from "../../components/invoice/FilterDropdown/FilterDropdown";
 import { InvoiceCard } from "../../components/invoice/InvoiceCard/InvoiceCard";
 import { AppShell } from "../../components/layout/AppShell/AppShell";
-import { seedInvoices } from "../../data/seedInvoices";
 import "./InvoiceListPage.css";
 
 export function InvoiceListPage() {
   const navigate = useNavigate();
-  const invoices = seedInvoices;
-  const hasInvoices = invoices.length > 0;
+  const { filteredInvoices, filter } = useInvoices();
+
+  const hasInvoices = filteredInvoices.length > 0;
+
+  const subtitle =
+    filter === "all"
+      ? `There are ${filteredInvoices.length} total invoices`
+      : `There are ${filteredInvoices.length} ${filter} invoices`;
 
   return (
     <AppShell>
@@ -19,9 +25,7 @@ export function InvoiceListPage() {
           <div>
             <h1 className="invoice-list-page__title">Invoices</h1>
             <p className="invoice-list-page__subtitle">
-              {hasInvoices
-                ? `There are ${invoices.length} total invoices`
-                : "No invoices"}
+              {hasInvoices ? subtitle : "No invoices"}
             </p>
           </div>
 
@@ -43,7 +47,7 @@ export function InvoiceListPage() {
             className="invoice-list-page__list"
             aria-label="Invoice list"
           >
-            {invoices.map((invoice) => (
+            {filteredInvoices.map((invoice) => (
               <InvoiceCard key={invoice.id} invoice={invoice} />
             ))}
           </section>
