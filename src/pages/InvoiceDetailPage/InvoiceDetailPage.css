@@ -12,7 +12,7 @@
 .invoice-detail-page__status-bar {
   background-color: var(--color-surface);
   border-radius: 8px;
-  padding: 24px 32px;
+  padding: 20px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -45,7 +45,7 @@
   display: flex;
   justify-content: space-between;
   gap: 32px;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
 }
 
 .invoice-detail-card__id {
@@ -75,7 +75,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 32px;
-  margin-bottom: 44px;
+  margin-bottom: 48px;
 }
 
 .invoice-detail-card__value {
