@@ -147,6 +147,7 @@ export function InvoiceDetailPage() {
         {isDeleteModalOpen ? (
           <Modal
             title="Confirm Deletion"
+            onClose={() => setIsDeleteModalOpen(false)}
             actions={
               <>
                 <Button

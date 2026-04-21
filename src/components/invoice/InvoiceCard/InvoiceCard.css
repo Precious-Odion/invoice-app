@@ -15,7 +15,6 @@
   border-color: var(--color-purple-primary);
 }
 
-/* LEFT GROUP */
 .invoice-card__group--left {
   display: flex;
   align-items: center;
@@ -41,7 +40,6 @@
   min-width: 120px;
 }
 
-/* RIGHT GROUP */
 .invoice-card__group--right {
   display: flex;
   align-items: center;
@@ -57,4 +55,8 @@
 .invoice-card__arrow {
   color: var(--color-purple-primary);
   font-size: 22px;
+}
+.invoice-card:focus-visible {
+  border-color: var(--color-purple-primary);
+  outline: none;
 }
