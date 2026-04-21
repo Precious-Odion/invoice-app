@@ -57,7 +57,7 @@ function createInitialValues(): InvoiceFormValues {
       postCode: "",
       country: "",
     },
-    items: [createEmptyItem()],
+    items: [],
   };
 }
 
@@ -178,14 +178,10 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   };
 
   const removeItem = (itemId: string) => {
-    setFormValues((current) => {
-      const nextItems = current.items.filter((item) => item.id !== itemId);
-
-      return {
-        ...current,
-        items: nextItems.length > 0 ? nextItems : [createEmptyItem()],
-      };
-    });
+    setFormValues((current) => ({
+      ...current,
+      items: current.items.filter((item) => item.id !== itemId),
+    }));
   };
 
   const validate = (status: "draft" | "pending") => {
@@ -246,17 +242,24 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
         nextErrors.clientCountry = "Client country can't be empty";
       }
 
-      const hasInvalidItems =
-        formValues.items.length === 0 ||
-        formValues.items.some(
-          (item) =>
-            !item.name.trim() ||
-            Number(item.quantity) <= 0 ||
-            Number(item.price) <= 0,
-        );
+      const validItems = formValues.items.filter(
+        (item) =>
+          item.name.trim() &&
+          Number(item.quantity) > 0 &&
+          Number(item.price) > 0,
+      );
 
-      if (hasInvalidItems) {
+      const invalidItems = formValues.items.filter(
+        (item) =>
+          !item.name.trim() ||
+          Number(item.quantity) <= 0 ||
+          Number(item.price) <= 0,
+      );
+
+      if (validItems.length === 0) {
         nextErrors.items = "At least one valid item must be added";
+      } else if (invalidItems.length > 0) {
+        nextErrors.items = "Some item rows are incomplete or invalid";
       }
     }
 
@@ -610,13 +613,15 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               <h2 className="invoice-form__items-title">Item List</h2>
 
               <div className="invoice-items">
-                <div className="invoice-items__header">
-                  <span>Item Name</span>
-                  <span>Qty.</span>
-                  <span>Price</span>
-                  <span>Total</span>
-                  <span />
-                </div>
+                {formValues.items.length > 0 ? (
+                  <div className="invoice-items__header">
+                    <span>Item Name</span>
+                    <span>Qty.</span>
+                    <span>Price</span>
+                    <span>Total</span>
+                    <span />
+                  </div>
+                ) : null}
 
                 {formValues.items.map((item) => (
                   <div className="invoice-items__row" key={item.id}>
@@ -671,7 +676,6 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   </div>
                 ))}
               </div>
-
               {errors.items ? (
                 <p className="invoice-form__error">{errors.items}</p>
               ) : null}
