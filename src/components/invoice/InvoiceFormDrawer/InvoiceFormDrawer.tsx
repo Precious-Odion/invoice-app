@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useInvoices } from "../../../context/InvoiceContext";
 import type { InvoiceFormValues, InvoiceItem } from "../../../types/invoice";
@@ -24,6 +24,8 @@ interface FormErrors {
   clientCountry?: string;
   items?: string;
 }
+
+const formRef = useRef<HTMLFormElement>(null);
 
 function createEmptyItem(): InvoiceItem {
   return {
@@ -208,6 +210,10 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
         nextErrors.createdAt = "Invoice date can't be empty";
       }
 
+      if (![1, 7, 14, 30].includes(formValues.paymentTerms)) {
+        nextErrors.createdAt = "Select a valid payment term";
+      }
+
       if (!formValues.senderAddress.street.trim()) {
         nextErrors.senderStreet = "Sender street can't be empty";
       }
@@ -255,7 +261,20 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     }
 
     setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
+
+    const isValid = Object.keys(nextErrors).length === 0;
+
+    if (!isValid) {
+      requestAnimationFrame(() => {
+        const firstErrorField = formRef.current?.querySelector(
+          ".invoice-form__input--error",
+        ) as HTMLInputElement | HTMLSelectElement | null;
+
+        firstErrorField?.focus();
+      });
+    }
+
+    return isValid;
   };
 
   const handleSubmit = (status: "draft" | "pending") => {
@@ -301,6 +320,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
           </h1>
 
           <form
+            ref={formRef}
             className="invoice-form"
             onSubmit={(event) => event.preventDefault()}
           >
@@ -548,6 +568,9 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   <label htmlFor="paymentTerms">Payment Terms</label>
                   <select
                     id="paymentTerms"
+                    className={
+                      errors.createdAt ? "invoice-form__input--error" : ""
+                    }
                     value={formValues.paymentTerms}
                     onChange={(event) =>
                       updateField("paymentTerms", Number(event.target.value))

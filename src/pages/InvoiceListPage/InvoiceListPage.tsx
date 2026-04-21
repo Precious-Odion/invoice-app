@@ -9,14 +9,14 @@ import "./InvoiceListPage.css";
 
 export function InvoiceListPage() {
   const navigate = useNavigate();
-  const { filteredInvoices, filter } = useInvoices();
+  const { filteredInvoices, selectedFilters } = useInvoices();
 
   const hasInvoices = filteredInvoices.length > 0;
 
   const subtitle =
-    filter === "all"
+    selectedFilters.length === 0
       ? `There are ${filteredInvoices.length} total invoices`
-      : `There are ${filteredInvoices.length} ${filter} invoices`;
+      : `There are ${filteredInvoices.length} filtered invoices`;
 
   return (
     <AppShell>

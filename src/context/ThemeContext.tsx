@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useContext,
@@ -24,7 +25,11 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (typeof window === "undefined") {
+      return "dark";
+    }
+
+    const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
 
     if (savedTheme === "light" || savedTheme === "dark") {
       return savedTheme;
@@ -35,7 +40,10 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     document.body.classList.toggle("dark", theme === "dark");
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
+
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    }
   }, [theme]);
 
   const toggleTheme = () => {

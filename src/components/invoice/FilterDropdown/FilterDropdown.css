@@ -86,3 +86,15 @@
     right: -40px;
   }
 }
+
+.filter-dropdown__clear {
+  margin-top: 8px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-purple-primary);
+}
+
+.filter-dropdown__clear:hover {
+  opacity: 0.8;
+}

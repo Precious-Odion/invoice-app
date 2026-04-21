@@ -1,5 +1,7 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -9,7 +11,7 @@ import {
 import { seedInvoices } from "../data/seedInvoices";
 import type { Invoice, InvoiceStatus } from "../types/invoice";
 
-type InvoiceFilter = "all" | InvoiceStatus;
+type InvoiceFilter = InvoiceStatus;
 
 interface CreateInvoiceInput extends Omit<
   Invoice,
@@ -20,9 +22,10 @@ interface CreateInvoiceInput extends Omit<
 
 interface InvoiceContextValue {
   invoices: Invoice[];
-  filter: InvoiceFilter;
+  selectedFilters: InvoiceFilter[];
   filteredInvoices: Invoice[];
-  setFilter: (filter: InvoiceFilter) => void;
+  toggleFilter: (filter: InvoiceFilter) => void;
+  clearFilters: () => void;
   getInvoiceById: (id: string) => Invoice | undefined;
   createInvoice: (invoice: CreateInvoiceInput) => Invoice;
   updateInvoice: (
@@ -72,7 +75,11 @@ function generateInvoiceId() {
 
 export function InvoiceProvider({ children }: InvoiceProviderProps) {
   const [invoices, setInvoices] = useState<Invoice[]>(() => {
-    const savedInvoices = localStorage.getItem(INVOICES_STORAGE_KEY);
+    if (typeof window === "undefined") {
+      return seedInvoices;
+    }
+
+    const savedInvoices = window.localStorage.getItem(INVOICES_STORAGE_KEY);
 
     if (!savedInvoices) {
       return seedInvoices;
@@ -86,23 +93,44 @@ export function InvoiceProvider({ children }: InvoiceProviderProps) {
     }
   });
 
-  const [filter, setFilter] = useState<InvoiceFilter>("all");
+  const [selectedFilters, setSelectedFilters] = useState<InvoiceFilter[]>([]);
 
   useEffect(() => {
-    localStorage.setItem(INVOICES_STORAGE_KEY, JSON.stringify(invoices));
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    window.localStorage.setItem(INVOICES_STORAGE_KEY, JSON.stringify(invoices));
   }, [invoices]);
 
   const filteredInvoices = useMemo(() => {
-    if (filter === "all") {
+    if (selectedFilters.length === 0) {
       return invoices;
     }
 
-    return invoices.filter((invoice) => invoice.status === filter);
-  }, [filter, invoices]);
+    return invoices.filter((invoice) =>
+      selectedFilters.includes(invoice.status),
+    );
+  }, [invoices, selectedFilters]);
 
-  const getInvoiceById = (id: string) => {
-    return invoices.find((invoice) => invoice.id === id);
+  const toggleFilter = (filter: InvoiceFilter) => {
+    setSelectedFilters((currentFilters) =>
+      currentFilters.includes(filter)
+        ? currentFilters.filter((item) => item !== filter)
+        : [...currentFilters, filter],
+    );
   };
+
+  const clearFilters = () => {
+    setSelectedFilters([]);
+  };
+
+  const getInvoiceById = useCallback(
+    (id: string) => {
+      return invoices.find((invoice) => invoice.id === id);
+    },
+    [invoices],
+  );
 
   const createInvoice = (invoiceInput: CreateInvoiceInput) => {
     const items = invoiceInput.items.map((item) => ({
@@ -172,16 +200,17 @@ export function InvoiceProvider({ children }: InvoiceProviderProps) {
   const value = useMemo(
     () => ({
       invoices,
-      filter,
+      selectedFilters,
       filteredInvoices,
-      setFilter,
+      toggleFilter,
+      clearFilters,
       getInvoiceById,
       createInvoice,
       updateInvoice,
       deleteInvoice,
       markAsPaid,
     }),
-    [invoices, filter, filteredInvoices],
+    [invoices, selectedFilters, filteredInvoices, getInvoiceById],
   );
 
   return (

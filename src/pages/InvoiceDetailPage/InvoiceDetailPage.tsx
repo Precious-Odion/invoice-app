@@ -58,7 +58,7 @@ export function InvoiceDetailPage() {
               Delete
             </Button>
 
-            {invoice.status !== "paid" ? (
+            {invoice.status === "pending" ? (
               <Button variant="primary" onClick={() => markAsPaid(invoice.id)}>
                 Mark as Paid
               </Button>
