@@ -259,3 +259,8 @@
   font-weight: 600;
   margin-top: -4px;
 }
+
+.invoice-form__field input.invoice-form__input--error,
+.invoice-form__field select.invoice-form__input--error {
+  border-color: #ec5757;
+}

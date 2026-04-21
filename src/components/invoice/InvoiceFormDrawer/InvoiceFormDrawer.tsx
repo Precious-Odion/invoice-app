@@ -12,12 +12,22 @@ interface InvoiceFormDrawerProps {
 interface FormErrors {
   clientName?: string;
   clientEmail?: string;
+  description?: string;
+  senderStreet?: string;
+  senderCity?: string;
+  senderPostCode?: string;
+  senderCountry?: string;
+  clientStreet?: string;
+  clientCity?: string;
+  clientPostCode?: string;
+  clientCountry?: string;
+  createdAt?: string;
   items?: string;
 }
 
 function createEmptyItem(): InvoiceItem {
   return {
-    id: crypto.randomUUID(),
+    id: globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`,
     name: "",
     quantity: 1,
     price: 0,
@@ -150,6 +160,26 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       items: current.items.filter((item) => item.id !== itemId),
     }));
   };
+
+  if (mode === "edit" && !invoice) {
+    return (
+      <section className="invoice-drawer">
+        <div className="invoice-drawer__panel">
+          <div className="invoice-drawer__scroll">
+            <h1 className="invoice-drawer__title">Invoice not found</h1>
+            <p className="invoice-form__error">
+              The invoice you are trying to edit does not exist.
+            </p>
+          </div>
+          <footer className="invoice-drawer__footer">
+            <Button variant="secondary" onClick={() => navigate("/")}>
+              Go Back
+            </Button>
+          </footer>
+        </div>
+      </section>
+    );
+  }
 
   const validate = (status: "draft" | "pending") => {
     const nextErrors: FormErrors = {};
@@ -308,7 +338,10 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   }
                 />
                 {errors.clientName ? (
-                  <p className="invoice-form__error">{errors.clientName}</p>
+                  <p className="invoice-form__error">
+                    className=
+                    {errors.clientName ? "invoice-form__input--error" : ""}
+                  </p>
                 ) : null}
               </div>
 
@@ -508,7 +541,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               <Button variant="secondary" onClick={() => navigate(-1)}>
                 Cancel
               </Button>
-              <Button variant="primary" onClick={() => handleSubmit("pending")}>
+              <Button
+                variant="primary"
+                onClick={() =>
+                  handleSubmit(
+                    invoice?.status === "draft" ? "draft" : "pending",
+                  )
+                }
+              >
                 Save Changes
               </Button>
             </>
