@@ -14,6 +14,7 @@ interface FormErrors {
   clientEmail?: string;
   description?: string;
   createdAt?: string;
+  paymentTerms?: string;
   senderStreet?: string;
   senderCity?: string;
   senderPostCode?: string;
@@ -23,9 +24,8 @@ interface FormErrors {
   clientPostCode?: string;
   clientCountry?: string;
   items?: string;
+  summary?: string;
 }
-
-const formRef = useRef<HTMLFormElement>(null);
 
 function createEmptyItem(): InvoiceItem {
   return {
@@ -65,6 +65,22 @@ function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function isValidName(value: string) {
+  return /^[A-Za-z]+(?:[A-Za-z\s'-]*[A-Za-z])?$/.test(value.trim());
+}
+
+function isValidCityOrCountry(value: string) {
+  return /^[A-Za-z]+(?:[A-Za-z\s'-]*[A-Za-z])?$/.test(value.trim());
+}
+
+function isValidStreet(value: string) {
+  return /^[A-Za-z0-9\s,.'#/-]+$/.test(value.trim());
+}
+
+function isValidDescription(value: string) {
+  return /^[A-Za-z0-9\s,.'&()/-]+$/.test(value.trim());
+}
+
 export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -92,6 +108,8 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   const [formValues, setFormValues] =
     useState<InvoiceFormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
+
+  const formRef = useRef<HTMLFormElement>(null);
 
   const isEdit = mode === "edit";
 
@@ -124,6 +142,12 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       ...current,
       [key]: value,
     }));
+
+    setErrors((current) => ({
+      ...current,
+      [key]: undefined,
+      summary: undefined,
+    }));
   };
 
   const updateAddressField = (
@@ -137,6 +161,29 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
         ...current[section],
         [field]: value,
       },
+    }));
+
+    const errorKeyMap = {
+      senderAddress: {
+        street: "senderStreet",
+        city: "senderCity",
+        postCode: "senderPostCode",
+        country: "senderCountry",
+      },
+      clientAddress: {
+        street: "clientStreet",
+        city: "clientCity",
+        postCode: "clientPostCode",
+        country: "clientCountry",
+      },
+    } as const;
+
+    const errorKey = errorKeyMap[section][field] as keyof FormErrors;
+
+    setErrors((current) => ({
+      ...current,
+      [errorKey]: undefined,
+      summary: undefined,
     }));
   };
 
@@ -168,6 +215,12 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
         };
       }),
     }));
+
+    setErrors((current) => ({
+      ...current,
+      items: undefined,
+      summary: undefined,
+    }));
   };
 
   const addItem = () => {
@@ -190,12 +243,124 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     );
   };
 
+  const validateSingleField = (field: keyof FormErrors) => {
+    let errorMessage = "";
+
+    switch (field) {
+      case "clientName":
+        if (!formValues.clientName.trim()) {
+          errorMessage = "Client's name can't be empty";
+        } else if (!isValidName(formValues.clientName)) {
+          errorMessage = "Client's name contains invalid characters";
+        }
+        break;
+
+      case "clientEmail":
+        if (!formValues.clientEmail.trim()) {
+          errorMessage = "Client's email can't be empty";
+        } else if (!isValidEmail(formValues.clientEmail)) {
+          errorMessage = "Invalid email format";
+        }
+        break;
+
+      case "description":
+        if (!formValues.description.trim()) {
+          errorMessage = "Project description can't be empty";
+        } else if (!isValidDescription(formValues.description)) {
+          errorMessage = "Project description contains invalid characters";
+        }
+        break;
+
+      case "createdAt":
+        if (!formValues.createdAt.trim()) {
+          errorMessage = "Invoice date can't be empty";
+        }
+        break;
+
+      case "paymentTerms":
+        if (![1, 7, 14, 30].includes(formValues.paymentTerms)) {
+          errorMessage = "Select a valid payment term";
+        }
+        break;
+
+      case "senderStreet":
+        if (!formValues.senderAddress.street.trim()) {
+          errorMessage = "Sender street can't be empty";
+        } else if (!isValidStreet(formValues.senderAddress.street)) {
+          errorMessage = "Sender street contains invalid characters";
+        }
+        break;
+
+      case "senderCity":
+        if (!formValues.senderAddress.city.trim()) {
+          errorMessage = "Sender city can't be empty";
+        } else if (!isValidCityOrCountry(formValues.senderAddress.city)) {
+          errorMessage = "Sender city contains invalid characters";
+        }
+        break;
+
+      case "senderPostCode":
+        if (!formValues.senderAddress.postCode.trim()) {
+          errorMessage = "Sender post code can't be empty";
+        }
+        break;
+
+      case "senderCountry":
+        if (!formValues.senderAddress.country.trim()) {
+          errorMessage = "Sender country can't be empty";
+        } else if (!isValidCityOrCountry(formValues.senderAddress.country)) {
+          errorMessage = "Sender country contains invalid characters";
+        }
+        break;
+
+      case "clientStreet":
+        if (!formValues.clientAddress.street.trim()) {
+          errorMessage = "Client street can't be empty";
+        } else if (!isValidStreet(formValues.clientAddress.street)) {
+          errorMessage = "Client street contains invalid characters";
+        }
+        break;
+
+      case "clientCity":
+        if (!formValues.clientAddress.city.trim()) {
+          errorMessage = "Client city can't be empty";
+        } else if (!isValidCityOrCountry(formValues.clientAddress.city)) {
+          errorMessage = "Client city contains invalid characters";
+        }
+        break;
+
+      case "clientPostCode":
+        if (!formValues.clientAddress.postCode.trim()) {
+          errorMessage = "Client post code can't be empty";
+        }
+        break;
+
+      case "clientCountry":
+        if (!formValues.clientAddress.country.trim()) {
+          errorMessage = "Client country can't be empty";
+        } else if (!isValidCityOrCountry(formValues.clientAddress.country)) {
+          errorMessage = "Client country contains invalid characters";
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors((current) => ({
+      ...current,
+      [field]: errorMessage || undefined,
+    }));
+  };
+
   const validate = (status: "draft" | "pending") => {
     const nextErrors: FormErrors = {};
 
     if (status === "pending") {
       if (!formValues.clientName.trim()) {
         nextErrors.clientName = "Client's name can't be empty";
+      } else if (!isValidName(formValues.clientName)) {
+        nextErrors.clientName = "Client's name contains invalid characters";
       }
 
       if (!formValues.clientEmail.trim()) {
@@ -206,6 +371,9 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
       if (!formValues.description.trim()) {
         nextErrors.description = "Project description can't be empty";
+      } else if (!isValidDescription(formValues.description)) {
+        nextErrors.description =
+          "Project description contains invalid characters";
       }
 
       if (!formValues.createdAt.trim()) {
@@ -213,15 +381,19 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       }
 
       if (![1, 7, 14, 30].includes(formValues.paymentTerms)) {
-        nextErrors.createdAt = "Select a valid payment term";
+        nextErrors.paymentTerms = "Select a valid payment term";
       }
 
       if (!formValues.senderAddress.street.trim()) {
         nextErrors.senderStreet = "Sender street can't be empty";
+      } else if (!isValidStreet(formValues.senderAddress.street)) {
+        nextErrors.senderStreet = "Sender street contains invalid characters";
       }
 
       if (!formValues.senderAddress.city.trim()) {
         nextErrors.senderCity = "Sender city can't be empty";
+      } else if (!isValidCityOrCountry(formValues.senderAddress.city)) {
+        nextErrors.senderCity = "Sender city contains invalid characters";
       }
 
       if (!formValues.senderAddress.postCode.trim()) {
@@ -230,14 +402,20 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
       if (!formValues.senderAddress.country.trim()) {
         nextErrors.senderCountry = "Sender country can't be empty";
+      } else if (!isValidCityOrCountry(formValues.senderAddress.country)) {
+        nextErrors.senderCountry = "Sender country contains invalid characters";
       }
 
       if (!formValues.clientAddress.street.trim()) {
         nextErrors.clientStreet = "Client street can't be empty";
+      } else if (!isValidStreet(formValues.clientAddress.street)) {
+        nextErrors.clientStreet = "Client street contains invalid characters";
       }
 
       if (!formValues.clientAddress.city.trim()) {
         nextErrors.clientCity = "Client city can't be empty";
+      } else if (!isValidCityOrCountry(formValues.clientAddress.city)) {
+        nextErrors.clientCity = "Client city contains invalid characters";
       }
 
       if (!formValues.clientAddress.postCode.trim()) {
@@ -246,6 +424,8 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
       if (!formValues.clientAddress.country.trim()) {
         nextErrors.clientCountry = "Client country can't be empty";
+      } else if (!isValidCityOrCountry(formValues.clientAddress.country)) {
+        nextErrors.clientCountry = "Client country contains invalid characters";
       }
 
       const validItems = formValues.items.filter(
@@ -254,11 +434,16 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       const invalidItems = formValues.items.filter((item) =>
         isItemInvalid(item),
       );
+
       if (validItems.length === 0) {
         nextErrors.items = "At least one valid item must be added";
       } else if (invalidItems.length > 0) {
         nextErrors.items = "Some item rows are incomplete or invalid";
       }
+    }
+
+    if (Object.keys(nextErrors).length > 0) {
+      nextErrors.summary = "Please fix the highlighted fields before saving.";
     }
 
     setErrors(nextErrors);
@@ -343,6 +528,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                       event.target.value,
                     )
                   }
+                  onBlur={() => validateSingleField("senderStreet")}
                 />
                 {errors.senderStreet ? (
                   <p className="invoice-form__error">{errors.senderStreet}</p>
@@ -365,6 +551,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         event.target.value,
                       )
                     }
+                    onBlur={() => validateSingleField("senderCity")}
                   />
                   {errors.senderCity ? (
                     <p className="invoice-form__error">{errors.senderCity}</p>
@@ -386,6 +573,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         event.target.value,
                       )
                     }
+                    onBlur={() => validateSingleField("senderPostCode")}
                   />
                   {errors.senderPostCode ? (
                     <p className="invoice-form__error">
@@ -409,6 +597,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         event.target.value,
                       )
                     }
+                    onBlur={() => validateSingleField("senderCountry")}
                   />
                   {errors.senderCountry ? (
                     <p className="invoice-form__error">
@@ -434,6 +623,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   onChange={(event) =>
                     updateField("clientName", event.target.value)
                   }
+                  onBlur={() => validateSingleField("clientName")}
                 />
                 {errors.clientName ? (
                   <p className="invoice-form__error">{errors.clientName}</p>
@@ -453,6 +643,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   onChange={(event) =>
                     updateField("clientEmail", event.target.value)
                   }
+                  onBlur={() => validateSingleField("clientEmail")}
                 />
                 {errors.clientEmail ? (
                   <p className="invoice-form__error">{errors.clientEmail}</p>
@@ -474,6 +665,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                       event.target.value,
                     )
                   }
+                  onBlur={() => validateSingleField("clientStreet")}
                 />
                 {errors.clientStreet ? (
                   <p className="invoice-form__error">{errors.clientStreet}</p>
@@ -496,6 +688,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         event.target.value,
                       )
                     }
+                    onBlur={() => validateSingleField("clientCity")}
                   />
                   {errors.clientCity ? (
                     <p className="invoice-form__error">{errors.clientCity}</p>
@@ -517,6 +710,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         event.target.value,
                       )
                     }
+                    onBlur={() => validateSingleField("clientPostCode")}
                   />
                   {errors.clientPostCode ? (
                     <p className="invoice-form__error">
@@ -540,6 +734,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         event.target.value,
                       )
                     }
+                    onBlur={() => validateSingleField("clientCountry")}
                   />
                   {errors.clientCountry ? (
                     <p className="invoice-form__error">
@@ -562,6 +757,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                     onChange={(event) =>
                       updateField("createdAt", event.target.value)
                     }
+                    onBlur={() => validateSingleField("createdAt")}
                   />
                   {errors.createdAt ? (
                     <p className="invoice-form__error">{errors.createdAt}</p>
@@ -573,18 +769,22 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   <select
                     id="paymentTerms"
                     className={
-                      errors.createdAt ? "invoice-form__input--error" : ""
+                      errors.paymentTerms ? "invoice-form__input--error" : ""
                     }
                     value={formValues.paymentTerms}
                     onChange={(event) =>
                       updateField("paymentTerms", Number(event.target.value))
                     }
+                    onBlur={() => validateSingleField("paymentTerms")}
                   >
                     <option value={1}>Net 1 Day</option>
                     <option value={7}>Net 7 Days</option>
                     <option value={14}>Net 14 Days</option>
                     <option value={30}>Net 30 Days</option>
                   </select>
+                  {errors.paymentTerms ? (
+                    <p className="invoice-form__error">{errors.paymentTerms}</p>
+                  ) : null}
                 </div>
               </div>
 
@@ -592,7 +792,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 <label htmlFor="projectDescription">Project Description</label>
                 <input
                   id="projectDescription"
-                  placeholder="e.g. App Development Service"
+                  placeholder="e.g. Graphic Design Service"
                   className={
                     errors.description ? "invoice-form__input--error" : ""
                   }
@@ -600,6 +800,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   onChange={(event) =>
                     updateField("description", event.target.value)
                   }
+                  onBlur={() => validateSingleField("description")}
                 />
                 {errors.description ? (
                   <p className="invoice-form__error">{errors.description}</p>
@@ -629,6 +830,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   return (
                     <div className="invoice-items__row" key={item.id}>
                       <input
+                        placeholder="Item name"
                         className={
                           itemHasError && !item.name.trim()
                             ? "invoice-form__input--error"
@@ -642,6 +844,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                       <input
                         type="number"
                         min="1"
+                        placeholder="1"
                         className={
                           itemHasError && Number(item.quantity) <= 0
                             ? "invoice-form__input--error"
@@ -660,6 +863,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         type="number"
                         min="0"
                         step="0.01"
+                        placeholder="0.00"
                         className={
                           itemHasError && Number(item.price) <= 0
                             ? "invoice-form__input--error"
@@ -700,6 +904,10 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
             </section>
           </form>
         </div>
+
+        {errors.summary ? (
+          <div className="invoice-form__summary-error">{errors.summary}</div>
+        ) : null}
 
         <footer className="invoice-drawer__footer">
           {isEdit ? (

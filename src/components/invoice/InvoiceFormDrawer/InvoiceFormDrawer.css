@@ -184,6 +184,10 @@
     border-radius: 0;
   }
 
+  .invoice-form__summary-error {
+    padding: 0 24px 16px;
+  }
+
   .invoice-drawer__scroll {
     padding: 32px 24px 120px;
   }
@@ -269,4 +273,11 @@
 .invoice-form input::placeholder {
   color: var(--color-text-secondary);
   opacity: 0.5;
+}
+
+.invoice-form__summary-error {
+  padding: 0 56px 16px;
+  color: #ec5757;
+  font-size: 12px;
+  font-weight: 700;
 }
