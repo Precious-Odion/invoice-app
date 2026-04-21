@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button } from "../../components/common/Button/Button";
 import { Modal } from "../../components/common/Modal/Modal";
 import { InvoiceStatusBadge } from "../../components/invoice/InvoiceStatusBadge/InvoiceStatusBadge";
@@ -9,7 +10,33 @@ import { formatDate } from "../../utils/formatDate";
 import "./InvoiceDetailPage.css";
 
 export function InvoiceDetailPage() {
-  const invoice = seedInvoices[1];
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const invoice = useMemo(
+    () => seedInvoices.find((item) => item.id === id),
+    [id],
+  );
+
+  if (!invoice) {
+    return (
+      <AppShell>
+        <section className="invoice-detail-page page-container">
+          <Link to="/" className="invoice-detail-page__back-link">
+            ‹ Go back
+          </Link>
+
+          <article className="invoice-detail-card">
+            <h1 className="invoice-detail-card__id">Invoice not found</h1>
+            <p className="invoice-detail-card__description">
+              The invoice you are trying to view does not exist.
+            </p>
+          </article>
+        </section>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell>
@@ -28,7 +55,11 @@ export function InvoiceDetailPage() {
             <Link to={`/invoice/${invoice.id}/edit`}>
               <Button variant="secondary">Edit</Button>
             </Link>
-            <Button variant="danger">Delete</Button>
+
+            <Button variant="danger" onClick={() => setIsDeleteModalOpen(true)}>
+              Delete
+            </Button>
+
             <Button variant="primary">Mark as Paid</Button>
           </div>
         </div>
@@ -111,18 +142,33 @@ export function InvoiceDetailPage() {
           </section>
         </article>
 
-        <Modal
-          title="Confirm Deletion"
-          actions={
-            <>
-              <Button variant="secondary">Cancel</Button>
-              <Button variant="danger">Delete</Button>
-            </>
-          }
-        >
-          Are you sure you want to delete invoice #{invoice.id}? This action
-          cannot be undone.
-        </Modal>
+        {isDeleteModalOpen ? (
+          <Modal
+            title="Confirm Deletion"
+            actions={
+              <>
+                <Button
+                  variant="secondary"
+                  onClick={() => setIsDeleteModalOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => {
+                    setIsDeleteModalOpen(false);
+                    navigate("/");
+                  }}
+                >
+                  Delete
+                </Button>
+              </>
+            }
+          >
+            Are you sure you want to delete invoice #{invoice.id}? This action
+            cannot be undone.
+          </Modal>
+        ) : null}
       </section>
     </AppShell>
   );

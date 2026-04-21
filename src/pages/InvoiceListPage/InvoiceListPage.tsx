@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/common/Button/Button";
 import { EmptyState } from "../../components/common/EmptyState/EmptyState";
 import { FilterDropdown } from "../../components/invoice/FilterDropdown/FilterDropdown";
@@ -7,6 +8,7 @@ import { seedInvoices } from "../../data/seedInvoices";
 import "./InvoiceListPage.css";
 
 export function InvoiceListPage() {
+  const navigate = useNavigate();
   const invoices = seedInvoices;
   const hasInvoices = invoices.length > 0;
 
@@ -26,7 +28,11 @@ export function InvoiceListPage() {
           <div className="invoice-list-page__actions">
             <FilterDropdown />
 
-            <Button variant="primary" icon="+">
+            <Button
+              variant="primary"
+              icon="+"
+              onClick={() => navigate("/invoice/new")}
+            >
               New Invoice
             </Button>
           </div>
