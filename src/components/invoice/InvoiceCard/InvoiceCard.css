@@ -8,11 +8,15 @@
   justify-content: space-between;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: border-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .invoice-card:hover {
   border-color: var(--color-purple-primary);
+  transform: translateY(-1px);
 }
 
 .invoice-card__group--left {
@@ -59,4 +63,14 @@
 .invoice-card:focus-visible {
   border-color: var(--color-purple-primary);
   outline: none;
+}
+
+.invoice-detail-page__back-link,
+.invoice-list-page__back-link {
+  transition: color 0.2s ease;
+}
+
+.invoice-detail-page__back-link:hover,
+.invoice-list-page__back-link:hover {
+  color: var(--color-purple-primary);
 }

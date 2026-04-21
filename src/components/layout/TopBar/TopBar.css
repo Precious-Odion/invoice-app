@@ -20,7 +20,7 @@
 }
 
 .topbar__theme-button {
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast) color 0.2s ease, transform 0.2s ease;
 }
 
 .topbar__theme-button:hover {
@@ -30,6 +30,8 @@
 .topbar__theme-icon {
   position: relative;
   display: block;
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .topbar__theme-icon--dark {
@@ -96,4 +98,18 @@
     width: 32px;
     height: 32px;
   }
+}
+
+.topbar__theme-button {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.topbar__theme-icon {
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.topbar__theme-button:hover .topbar__theme-icon {
+  color: #ffffff;
+  transform: scale(1.08);
 }

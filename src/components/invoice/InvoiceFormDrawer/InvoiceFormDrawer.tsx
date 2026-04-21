@@ -108,7 +108,6 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   const [formValues, setFormValues] =
     useState<InvoiceFormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
-
   const formRef = useRef<HTMLFormElement>(null);
 
   const isEdit = mode === "edit";
@@ -133,6 +132,12 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       </section>
     );
   }
+
+  const isItemInvalid = (item: InvoiceItem) => {
+    return (
+      !item.name.trim() || Number(item.quantity) <= 0 || Number(item.price) <= 0
+    );
+  };
 
   const updateField = <K extends keyof InvoiceFormValues>(
     key: K,
@@ -228,6 +233,12 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       ...current,
       items: [...current.items, createEmptyItem()],
     }));
+
+    setErrors((current) => ({
+      ...current,
+      items: undefined,
+      summary: undefined,
+    }));
   };
 
   const removeItem = (itemId: string) => {
@@ -235,12 +246,12 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       ...current,
       items: current.items.filter((item) => item.id !== itemId),
     }));
-  };
 
-  const isItemInvalid = (item: InvoiceItem) => {
-    return (
-      !item.name.trim() || Number(item.quantity) <= 0 || Number(item.price) <= 0
-    );
+    setErrors((current) => ({
+      ...current,
+      items: undefined,
+      summary: undefined,
+    }));
   };
 
   const validateSingleField = (field: keyof FormErrors) => {
@@ -351,6 +362,167 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       ...current,
       [field]: errorMessage || undefined,
     }));
+  };
+
+  const validateDraftFields = () => {
+    const nextErrors: FormErrors = {};
+
+    if (formValues.clientName.trim() && !isValidName(formValues.clientName)) {
+      nextErrors.clientName = "Client's name contains invalid characters";
+    }
+
+    if (
+      formValues.clientEmail.trim() &&
+      !isValidEmail(formValues.clientEmail)
+    ) {
+      nextErrors.clientEmail = "Invalid email format";
+    }
+
+    if (
+      formValues.description.trim() &&
+      !isValidDescription(formValues.description)
+    ) {
+      nextErrors.description =
+        "Project description contains invalid characters";
+    }
+
+    if (
+      formValues.senderAddress.street.trim() &&
+      !isValidStreet(formValues.senderAddress.street)
+    ) {
+      nextErrors.senderStreet = "Sender street contains invalid characters";
+    }
+
+    if (
+      formValues.senderAddress.city.trim() &&
+      !isValidCityOrCountry(formValues.senderAddress.city)
+    ) {
+      nextErrors.senderCity = "Sender city contains invalid characters";
+    }
+
+    if (
+      formValues.senderAddress.country.trim() &&
+      !isValidCityOrCountry(formValues.senderAddress.country)
+    ) {
+      nextErrors.senderCountry = "Sender country contains invalid characters";
+    }
+
+    if (
+      formValues.clientAddress.street.trim() &&
+      !isValidStreet(formValues.clientAddress.street)
+    ) {
+      nextErrors.clientStreet = "Client street contains invalid characters";
+    }
+
+    if (
+      formValues.clientAddress.city.trim() &&
+      !isValidCityOrCountry(formValues.clientAddress.city)
+    ) {
+      nextErrors.clientCity = "Client city contains invalid characters";
+    }
+
+    if (
+      formValues.clientAddress.country.trim() &&
+      !isValidCityOrCountry(formValues.clientAddress.country)
+    ) {
+      nextErrors.clientCountry = "Client country contains invalid characters";
+    }
+
+    const validItems = formValues.items.filter((item) => !isItemInvalid(item));
+    const invalidItems = formValues.items.filter((item) => isItemInvalid(item));
+
+    if (validItems.length === 0 && formValues.items.length > 0) {
+      nextErrors.items = "At least one valid item must be added";
+    } else if (invalidItems.length > 0) {
+      nextErrors.items = "Some item rows are incomplete or invalid";
+    }
+
+    if (Object.keys(nextErrors).length > 0) {
+      nextErrors.summary = "Please fix the highlighted fields before saving.";
+    }
+
+    setErrors(nextErrors);
+
+    const isValid = Object.keys(nextErrors).length === 0;
+
+    if (!isValid) {
+      requestAnimationFrame(() => {
+        const firstErrorField = formRef.current?.querySelector(
+          ".invoice-form__input--error",
+        ) as HTMLInputElement | HTMLSelectElement | null;
+
+        firstErrorField?.focus();
+      });
+    }
+
+    return isValid;
+  };
+
+  const isPendingFormValid = () => {
+    const hasValidClientName =
+      formValues.clientName.trim() && isValidName(formValues.clientName);
+
+    const hasValidClientEmail =
+      formValues.clientEmail.trim() && isValidEmail(formValues.clientEmail);
+
+    const hasValidDescription =
+      formValues.description.trim() &&
+      isValidDescription(formValues.description);
+
+    const hasValidCreatedAt = formValues.createdAt.trim();
+
+    const hasValidPaymentTerms = [1, 7, 14, 30].includes(
+      formValues.paymentTerms,
+    );
+
+    const hasValidSenderStreet =
+      formValues.senderAddress.street.trim() &&
+      isValidStreet(formValues.senderAddress.street);
+
+    const hasValidSenderCity =
+      formValues.senderAddress.city.trim() &&
+      isValidCityOrCountry(formValues.senderAddress.city);
+
+    const hasValidSenderPostCode = formValues.senderAddress.postCode.trim();
+
+    const hasValidSenderCountry =
+      formValues.senderAddress.country.trim() &&
+      isValidCityOrCountry(formValues.senderAddress.country);
+
+    const hasValidClientStreet =
+      formValues.clientAddress.street.trim() &&
+      isValidStreet(formValues.clientAddress.street);
+
+    const hasValidClientCity =
+      formValues.clientAddress.city.trim() &&
+      isValidCityOrCountry(formValues.clientAddress.city);
+
+    const hasValidClientPostCode = formValues.clientAddress.postCode.trim();
+
+    const hasValidClientCountry =
+      formValues.clientAddress.country.trim() &&
+      isValidCityOrCountry(formValues.clientAddress.country);
+
+    const validItems = formValues.items.filter((item) => !isItemInvalid(item));
+    const invalidItems = formValues.items.filter((item) => isItemInvalid(item));
+
+    return (
+      Boolean(hasValidClientName) &&
+      Boolean(hasValidClientEmail) &&
+      Boolean(hasValidDescription) &&
+      Boolean(hasValidCreatedAt) &&
+      hasValidPaymentTerms &&
+      Boolean(hasValidSenderStreet) &&
+      Boolean(hasValidSenderCity) &&
+      Boolean(hasValidSenderPostCode) &&
+      Boolean(hasValidSenderCountry) &&
+      Boolean(hasValidClientStreet) &&
+      Boolean(hasValidClientCity) &&
+      Boolean(hasValidClientPostCode) &&
+      Boolean(hasValidClientCountry) &&
+      validItems.length > 0 &&
+      invalidItems.length === 0
+    );
   };
 
   const validate = (status: "draft" | "pending") => {
@@ -464,7 +636,8 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   };
 
   const handleSubmit = (status: "draft" | "pending") => {
-    const isValid = validate(status);
+    const isValid =
+      status === "draft" ? validateDraftFields() : validate(status);
 
     if (!isValid) {
       return;
@@ -491,6 +664,8 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     navigate(`/invoice/${createdInvoice.id}`);
   };
 
+  const isPendingSubmitDisabled = !isPendingFormValid();
+
   return (
     <section className="invoice-drawer">
       <div className="invoice-drawer__panel">
@@ -514,7 +689,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               <h2 className="invoice-form__section-title">Bill From</h2>
 
               <div className="invoice-form__field invoice-form__field--full">
-                <label htmlFor="senderStreet">Street Address</label>
+                <label
+                  htmlFor="senderStreet"
+                  className={
+                    errors.senderStreet ? "invoice-form__label--error" : ""
+                  }
+                >
+                  Street Address
+                </label>
                 <input
                   id="senderStreet"
                   className={
@@ -537,7 +719,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
               <div className="invoice-form__row invoice-form__row--triple">
                 <div className="invoice-form__field">
-                  <label htmlFor="senderCity">City</label>
+                  <label
+                    htmlFor="senderCity"
+                    className={
+                      errors.senderCity ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    City
+                  </label>
                   <input
                     id="senderCity"
                     className={
@@ -559,7 +748,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 </div>
 
                 <div className="invoice-form__field">
-                  <label htmlFor="senderPostCode">Post Code</label>
+                  <label
+                    htmlFor="senderPostCode"
+                    className={
+                      errors.senderPostCode ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    Post Code
+                  </label>
                   <input
                     id="senderPostCode"
                     className={
@@ -583,7 +779,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 </div>
 
                 <div className="invoice-form__field">
-                  <label htmlFor="senderCountry">Country</label>
+                  <label
+                    htmlFor="senderCountry"
+                    className={
+                      errors.senderCountry ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    Country
+                  </label>
                   <input
                     id="senderCountry"
                     className={
@@ -612,7 +815,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               <h2 className="invoice-form__section-title">Bill To</h2>
 
               <div className="invoice-form__field invoice-form__field--full">
-                <label htmlFor="clientName">Client&apos;s Name</label>
+                <label
+                  htmlFor="clientName"
+                  className={
+                    errors.clientName ? "invoice-form__label--error" : ""
+                  }
+                >
+                  Client&apos;s Name
+                </label>
                 <input
                   id="clientName"
                   placeholder="e.g. John Doe"
@@ -631,7 +841,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               </div>
 
               <div className="invoice-form__field invoice-form__field--full">
-                <label htmlFor="clientEmail">Client&apos;s Email</label>
+                <label
+                  htmlFor="clientEmail"
+                  className={
+                    errors.clientEmail ? "invoice-form__label--error" : ""
+                  }
+                >
+                  Client&apos;s Email
+                </label>
                 <input
                   id="clientEmail"
                   type="email"
@@ -651,7 +868,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               </div>
 
               <div className="invoice-form__field invoice-form__field--full">
-                <label htmlFor="clientStreet">Street Address</label>
+                <label
+                  htmlFor="clientStreet"
+                  className={
+                    errors.clientStreet ? "invoice-form__label--error" : ""
+                  }
+                >
+                  Street Address
+                </label>
                 <input
                   id="clientStreet"
                   className={
@@ -674,7 +898,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
               <div className="invoice-form__row invoice-form__row--triple">
                 <div className="invoice-form__field">
-                  <label htmlFor="clientCity">City</label>
+                  <label
+                    htmlFor="clientCity"
+                    className={
+                      errors.clientCity ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    City
+                  </label>
                   <input
                     id="clientCity"
                     className={
@@ -696,7 +927,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 </div>
 
                 <div className="invoice-form__field">
-                  <label htmlFor="clientPostCode">Post Code</label>
+                  <label
+                    htmlFor="clientPostCode"
+                    className={
+                      errors.clientPostCode ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    Post Code
+                  </label>
                   <input
                     id="clientPostCode"
                     className={
@@ -720,7 +958,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 </div>
 
                 <div className="invoice-form__field">
-                  <label htmlFor="clientCountry">Country</label>
+                  <label
+                    htmlFor="clientCountry"
+                    className={
+                      errors.clientCountry ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    Country
+                  </label>
                   <input
                     id="clientCountry"
                     className={
@@ -746,7 +991,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
               <div className="invoice-form__row invoice-form__row--double">
                 <div className="invoice-form__field">
-                  <label htmlFor="invoiceDate">Invoice Date</label>
+                  <label
+                    htmlFor="invoiceDate"
+                    className={
+                      errors.createdAt ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    Invoice Date
+                  </label>
                   <input
                     id="invoiceDate"
                     type="date"
@@ -765,7 +1017,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 </div>
 
                 <div className="invoice-form__field">
-                  <label htmlFor="paymentTerms">Payment Terms</label>
+                  <label
+                    htmlFor="paymentTerms"
+                    className={
+                      errors.paymentTerms ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    Payment Terms
+                  </label>
                   <select
                     id="paymentTerms"
                     className={
@@ -789,7 +1048,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               </div>
 
               <div className="invoice-form__field invoice-form__field--full">
-                <label htmlFor="projectDescription">Project Description</label>
+                <label
+                  htmlFor="projectDescription"
+                  className={
+                    errors.description ? "invoice-form__label--error" : ""
+                  }
+                >
+                  Project Description
+                </label>
                 <input
                   id="projectDescription"
                   placeholder="e.g. Graphic Design Service"
@@ -812,29 +1078,28 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               <h2 className="invoice-form__items-title">Item List</h2>
 
               <div className="invoice-items">
-                {formValues.items.length > 0 ? (
-                  <div className="invoice-items__header">
-                    <span>Item Name</span>
-                    <span>Qty.</span>
-                    <span>Price</span>
-                    <span>Total</span>
-                    <span />
-                  </div>
-                ) : null}
+                <div className="invoice-items__header">
+                  <span>Item Name</span>
+                  <span>Qty.</span>
+                  <span>Price</span>
+                  <span>Total</span>
+                  <span />
+                </div>
 
                 {formValues.items.map((item) => {
-                  const itemHasError = errors.items
-                    ? isItemInvalid(item)
-                    : false;
+                  const nameHasError =
+                    Boolean(errors.items) && !item.name.trim();
+                  const quantityHasError =
+                    Boolean(errors.items) && Number(item.quantity) <= 0;
+                  const priceHasError =
+                    Boolean(errors.items) && Number(item.price) <= 0;
 
                   return (
                     <div className="invoice-items__row" key={item.id}>
                       <input
                         placeholder="Item name"
                         className={
-                          itemHasError && !item.name.trim()
-                            ? "invoice-form__input--error"
-                            : ""
+                          nameHasError ? "invoice-form__input--error" : ""
                         }
                         value={item.name}
                         onChange={(event) =>
@@ -846,9 +1111,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         min="1"
                         placeholder="1"
                         className={
-                          itemHasError && Number(item.quantity) <= 0
-                            ? "invoice-form__input--error"
-                            : ""
+                          quantityHasError ? "invoice-form__input--error" : ""
                         }
                         value={item.quantity}
                         onChange={(event) =>
@@ -865,9 +1128,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         step="0.01"
                         placeholder="0.00"
                         className={
-                          itemHasError && Number(item.price) <= 0
-                            ? "invoice-form__input--error"
-                            : ""
+                          priceHasError ? "invoice-form__input--error" : ""
                         }
                         value={item.price}
                         onChange={(event) =>
@@ -890,6 +1151,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   );
                 })}
               </div>
+
               {errors.items ? (
                 <p className="invoice-form__error">{errors.items}</p>
               ) : null}
@@ -917,6 +1179,11 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               </Button>
               <Button
                 variant="primary"
+                disabled={
+                  invoice?.status === "pending"
+                    ? isPendingSubmitDisabled
+                    : false
+                }
                 onClick={() =>
                   handleSubmit(
                     invoice?.status === "draft" ? "draft" : "pending",
@@ -940,6 +1207,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 </Button>
                 <Button
                   variant="primary"
+                  disabled={isPendingSubmitDisabled}
                   onClick={() => handleSubmit("pending")}
                 >
                   Save &amp; Send

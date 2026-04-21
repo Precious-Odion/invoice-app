@@ -9,7 +9,7 @@
   font-size: 15px;
   font-weight: 700;
   color: var(--color-text-primary);
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), color 0.2s ease;
 }
 
 .filter-dropdown:hover {
@@ -49,6 +49,16 @@
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.filter-dropdown__option:hover {
+  color: var(--color-purple-primary);
+}
+
+.filter-dropdown__option:hover .filter-dropdown__checkbox {
+  border-color: var(--color-purple-primary);
+  background: rgba(124, 93, 250, 0.12);
 }
 
 .filter-dropdown__option input {
@@ -97,4 +107,16 @@
 
 .filter-dropdown__clear:hover {
   opacity: 0.8;
+}
+
+.filter-dropdown {
+  transition: color 0.2s ease;
+}
+
+.filter-dropdown:hover .filter-dropdown__label {
+  color: var(--color-purple-primary);
+}
+
+.filter-dropdown:hover .filter-dropdown__arrow {
+  color: var(--color-purple-primary);
 }
