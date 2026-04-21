@@ -7,6 +7,10 @@
 .invoice-detail-page__back-link {
   font-size: 15px;
   font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 .invoice-detail-page__status-bar {
