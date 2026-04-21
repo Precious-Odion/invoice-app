@@ -1109,11 +1109,11 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                       <input
                         type="number"
                         min="1"
-                        placeholder="1"
+                        placeholder="0"
                         className={
                           quantityHasError ? "invoice-form__input--error" : ""
                         }
-                        value={item.quantity}
+                        value={item.quantity === 0 ? "" : item.quantity}
                         onChange={(event) =>
                           updateItemField(
                             item.id,
@@ -1130,7 +1130,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         className={
                           priceHasError ? "invoice-form__input--error" : ""
                         }
-                        value={item.price}
+                        value={item.price === 0 ? "" : item.price}
                         onChange={(event) =>
                           updateItemField(
                             item.id,

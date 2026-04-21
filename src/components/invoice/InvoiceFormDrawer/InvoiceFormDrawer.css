@@ -184,12 +184,16 @@
 
 .invoice-items__row input {
   height: 48px;
-  border: 1px solid transparent;
   border-radius: 4px;
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   padding: 0 12px;
   font-weight: 700;
+  border: 1px solid var(--color-border);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .invoice-items__row p {
@@ -318,4 +322,14 @@
   .invoice-drawer__footer-right {
     margin-left: auto;
   }
+}
+
+.invoice-items__row input:hover {
+  border-color: var(--color-purple-primary);
+}
+
+.invoice-items__row input:focus {
+  outline: none;
+  border-color: var(--color-purple-primary);
+  box-shadow: 0 0 0 1px var(--color-purple-primary);
 }

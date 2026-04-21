@@ -28,6 +28,7 @@
 .invoice-card__id {
   font-weight: 700;
   min-width: 70px;
+  color: var(--color-text-primary);
 }
 
 .invoice-card__hash {

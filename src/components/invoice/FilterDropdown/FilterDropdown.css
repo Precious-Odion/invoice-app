@@ -5,26 +5,28 @@
 .filter-dropdown {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   font-size: 15px;
   font-weight: 700;
   color: var(--color-text-primary);
-  transition: opacity var(--transition-fast), color 0.2s ease;
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
 
-.filter-dropdown:hover {
-  opacity: 0.75;
+.filter-dropdown:hover .filter-dropdown__label,
+.filter-dropdown:hover .filter-dropdown__arrow {
+  color: var(--color-purple-primary);
 }
 
 .filter-dropdown__arrow {
   color: var(--color-purple-primary);
-  font-size: 16px;
-  transform: translateY(-1px);
-  transition: transform var(--transition-fast);
+  font-size: 18px;
+  line-height: 1;
+  transform: rotate(90deg);
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .filter-dropdown__arrow--open {
-  transform: rotate(180deg);
+  transform: rotate(-90deg);
 }
 
 .filter-dropdown__menu {
@@ -56,11 +58,6 @@
   color: var(--color-purple-primary);
 }
 
-.filter-dropdown__option:hover .filter-dropdown__checkbox {
-  border-color: var(--color-purple-primary);
-  background: rgba(124, 93, 250, 0.12);
-}
-
 .filter-dropdown__option input {
   position: absolute;
   opacity: 0;
@@ -74,6 +71,12 @@
   border: 1px solid var(--color-border);
   background-color: var(--color-surface-2);
   position: relative;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.filter-dropdown__option:hover .filter-dropdown__checkbox {
+  border-color: var(--color-purple-primary);
+  background-color: rgba(124, 93, 250, 0.12);
 }
 
 .filter-dropdown__option input:checked + .filter-dropdown__checkbox {
@@ -88,13 +91,7 @@
   display: grid;
   place-items: center;
   font-size: 11px;
-  color: white;
-}
-
-@media (max-width: 767px) {
-  .filter-dropdown__menu {
-    right: -40px;
-  }
+  color: #ffffff;
 }
 
 .filter-dropdown__clear {
@@ -109,14 +106,8 @@
   opacity: 0.8;
 }
 
-.filter-dropdown {
-  transition: color 0.2s ease;
-}
-
-.filter-dropdown:hover .filter-dropdown__label {
-  color: var(--color-purple-primary);
-}
-
-.filter-dropdown:hover .filter-dropdown__arrow {
-  color: var(--color-purple-primary);
+@media (max-width: 767px) {
+  .filter-dropdown__menu {
+    right: -40px;
+  }
 }

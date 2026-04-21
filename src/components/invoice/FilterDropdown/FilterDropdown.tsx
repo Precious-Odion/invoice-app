@@ -1,18 +1,41 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useInvoices } from "../../../context/InvoiceContext";
 import "./FilterDropdown.css";
 
 export function FilterDropdown() {
   const { selectedFilters, toggleFilter, clearFilters } = useInvoices();
   const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const label =
     selectedFilters.length === 0
       ? "Filter by status"
       : `Filter (${selectedFilters.length})`;
 
+  useEffect(() => {
+    function handlePointerDown(event: MouseEvent) {
+      if (!wrapperRef.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
-    <div className="filter-dropdown-wrapper">
+    <div className="filter-dropdown-wrapper" ref={wrapperRef}>
       <button
         className="filter-dropdown"
         type="button"
@@ -27,7 +50,7 @@ export function FilterDropdown() {
           }`}
           aria-hidden="true"
         >
-          ⌄
+          ›
         </span>
       </button>
 
