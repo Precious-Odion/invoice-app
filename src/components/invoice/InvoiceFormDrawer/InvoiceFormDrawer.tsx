@@ -1109,7 +1109,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                       <input
                         type="number"
                         min="1"
-                        placeholder="0"
+                        placeholder="1"
                         className={
                           quantityHasError ? "invoice-form__input--error" : ""
                         }
@@ -1130,12 +1130,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         className={
                           priceHasError ? "invoice-form__input--error" : ""
                         }
-                        value={item.price === 0 ? "" : item.price}
+                        value={item.price === 0 ? "" : String(item.price)}
                         onChange={(event) =>
                           updateItemField(
                             item.id,
                             "price",
-                            Number(event.target.value),
+                            event.target.value === ""
+                              ? 0
+                              : Number(event.target.value),
                           )
                         }
                       />
@@ -1144,8 +1146,10 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         type="button"
                         className="invoice-items__delete"
                         onClick={() => removeItem(item.id)}
+                        aria-label="Delete item"
+                        title="Delete item"
                       >
-                        🗑
+                        ✕
                       </button>
                     </div>
                   );
