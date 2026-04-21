@@ -184,6 +184,12 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     }));
   };
 
+  const isItemInvalid = (item: InvoiceItem) => {
+    return (
+      !item.name.trim() || Number(item.quantity) <= 0 || Number(item.price) <= 0
+    );
+  };
+
   const validate = (status: "draft" | "pending") => {
     const nextErrors: FormErrors = {};
 
@@ -243,19 +249,11 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       }
 
       const validItems = formValues.items.filter(
-        (item) =>
-          item.name.trim() &&
-          Number(item.quantity) > 0 &&
-          Number(item.price) > 0,
+        (item) => !isItemInvalid(item),
       );
-
-      const invalidItems = formValues.items.filter(
-        (item) =>
-          !item.name.trim() ||
-          Number(item.quantity) <= 0 ||
-          Number(item.price) <= 0,
+      const invalidItems = formValues.items.filter((item) =>
+        isItemInvalid(item),
       );
-
       if (validItems.length === 0) {
         nextErrors.items = "At least one valid item must be added";
       } else if (invalidItems.length > 0) {
@@ -623,58 +621,70 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   </div>
                 ) : null}
 
-                {formValues.items.map((item) => (
-                  <div className="invoice-items__row" key={item.id}>
-                    <input
-                      className={
-                        errors.items ? "invoice-form__input--error" : ""
-                      }
-                      value={item.name}
-                      onChange={(event) =>
-                        updateItemField(item.id, "name", event.target.value)
-                      }
-                    />
-                    <input
-                      type="number"
-                      min="1"
-                      className={
-                        errors.items ? "invoice-form__input--error" : ""
-                      }
-                      value={item.quantity}
-                      onChange={(event) =>
-                        updateItemField(
-                          item.id,
-                          "quantity",
-                          Number(event.target.value),
-                        )
-                      }
-                    />
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      className={
-                        errors.items ? "invoice-form__input--error" : ""
-                      }
-                      value={item.price}
-                      onChange={(event) =>
-                        updateItemField(
-                          item.id,
-                          "price",
-                          Number(event.target.value),
-                        )
-                      }
-                    />
-                    <p>{item.total.toFixed(2)}</p>
-                    <button
-                      type="button"
-                      className="invoice-items__delete"
-                      onClick={() => removeItem(item.id)}
-                    >
-                      🗑
-                    </button>
-                  </div>
-                ))}
+                {formValues.items.map((item) => {
+                  const itemHasError = errors.items
+                    ? isItemInvalid(item)
+                    : false;
+
+                  return (
+                    <div className="invoice-items__row" key={item.id}>
+                      <input
+                        className={
+                          itemHasError && !item.name.trim()
+                            ? "invoice-form__input--error"
+                            : ""
+                        }
+                        value={item.name}
+                        onChange={(event) =>
+                          updateItemField(item.id, "name", event.target.value)
+                        }
+                      />
+                      <input
+                        type="number"
+                        min="1"
+                        className={
+                          itemHasError && Number(item.quantity) <= 0
+                            ? "invoice-form__input--error"
+                            : ""
+                        }
+                        value={item.quantity}
+                        onChange={(event) =>
+                          updateItemField(
+                            item.id,
+                            "quantity",
+                            Number(event.target.value),
+                          )
+                        }
+                      />
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        className={
+                          itemHasError && Number(item.price) <= 0
+                            ? "invoice-form__input--error"
+                            : ""
+                        }
+                        value={item.price}
+                        onChange={(event) =>
+                          updateItemField(
+                            item.id,
+                            "price",
+                            Number(event.target.value),
+                          )
+                        }
+                      />
+                      <p>{item.total.toFixed(2)}</p>
+                      <button
+                        type="button"
+                        className="invoice-items__delete"
+                        onClick={() => removeItem(item.id)}
+                      >
+                        🗑
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
               {errors.items ? (
                 <p className="invoice-form__error">{errors.items}</p>
