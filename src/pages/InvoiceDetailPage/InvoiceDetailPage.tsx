@@ -12,7 +12,7 @@ import "./InvoiceDetailPage.css";
 export function InvoiceDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getInvoiceById } = useInvoices();
+  const { getInvoiceById, deleteInvoice, markAsPaid } = useInvoices();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const invoice = id ? getInvoiceById(id) : undefined;
@@ -58,7 +58,11 @@ export function InvoiceDetailPage() {
               Delete
             </Button>
 
-            <Button variant="primary">Mark as Paid</Button>
+            {invoice.status !== "paid" ? (
+              <Button variant="primary" onClick={() => markAsPaid(invoice.id)}>
+                Mark as Paid
+              </Button>
+            ) : null}
           </div>
         </div>
 
@@ -154,6 +158,7 @@ export function InvoiceDetailPage() {
                 <Button
                   variant="danger"
                   onClick={() => {
+                    deleteInvoice(invoice.id);
                     setIsDeleteModalOpen(false);
                     navigate("/");
                   }}
