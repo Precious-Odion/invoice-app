@@ -3,7 +3,6 @@ import "./TopBar.css";
 
 export function TopBar() {
   const { theme, toggleTheme } = useTheme();
-
   const isDark = theme === "dark";
 
   return (

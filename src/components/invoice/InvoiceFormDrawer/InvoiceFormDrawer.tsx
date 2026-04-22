@@ -31,7 +31,7 @@ function createEmptyItem(): InvoiceItem {
   return {
     id: globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`,
     name: "",
-    quantity: 1,
+    quantity: 0,
     price: 0,
     total: 0,
   };
@@ -105,6 +105,15 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     };
   }, [invoice]);
 
+  const closeDrawer = () => {
+    if (isEdit && invoice) {
+      navigate(`/invoice/${invoice.id}`);
+      return;
+    }
+
+    navigate("/");
+  };
+
   const [formValues, setFormValues] =
     useState<InvoiceFormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -114,8 +123,11 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
   if (isEdit && !invoice) {
     return (
-      <section className="invoice-drawer">
-        <div className="invoice-drawer__panel">
+      <section className="invoice-drawer" onClick={closeDrawer}>
+        <div
+          className="invoice-drawer__panel"
+          onClick={(event) => event.stopPropagation()}
+        >
           <div className="invoice-drawer__scroll">
             <h1 className="invoice-drawer__title">Invoice not found</h1>
             <p className="invoice-form__error">
@@ -1109,7 +1121,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                       <input
                         type="number"
                         min="1"
-                        placeholder="1"
+                        placeholder="0"
                         className={
                           quantityHasError ? "invoice-form__input--error" : ""
                         }
@@ -1118,7 +1130,9 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                           updateItemField(
                             item.id,
                             "quantity",
-                            Number(event.target.value),
+                            event.target.value === ""
+                              ? 0
+                              : Number(event.target.value),
                           )
                         }
                       />
@@ -1149,7 +1163,16 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         aria-label="Delete item"
                         title="Delete item"
                       >
-                        ✕
+                        <svg
+                          className="invoice-items__delete-icon"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M9 3h6l1 2h4v2H4V5h4l1-2Zm1 6h2v8h-2V9Zm4 0h2v8h-2V9ZM7 9h2v8H7V9Zm-1 12a2 2 0 0 1-2-2V7h16v12a2 2 0 0 1-2 2H6Z"
+                            fill="currentColor"
+                          />
+                        </svg>
                       </button>
                     </div>
                   );

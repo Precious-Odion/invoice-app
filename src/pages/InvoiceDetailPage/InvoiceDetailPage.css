@@ -101,6 +101,7 @@
   background-color: var(--color-surface-2);
   border-radius: 8px;
   overflow: hidden;
+  border: 1px solid rgba(124, 93, 250, 0.08);
 }
 
 .invoice-detail-card__table-head,
@@ -110,6 +111,7 @@
   gap: 16px;
   padding: 24px 32px;
   align-items: center;
+  border-bottom: 1px solid rgba(124, 93, 250, 0.06);
 }
 
 .invoice-detail-card__table-head {

@@ -110,10 +110,11 @@
 }
 
 .invoice-form__field input,
-.invoice-form__field select {
+.invoice-form__field select,
+.invoice-items__row input {
   width: 100%;
   height: 48px;
-  border: 1px solid transparent;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   background-color: var(--color-surface);
   color: var(--color-text-primary);
@@ -124,6 +125,12 @@
     border-color 0.2s ease,
     box-shadow 0.2s ease,
     background-color 0.2s ease;
+}
+
+body:not(.dark) .invoice-form__field input,
+body:not(.dark) .invoice-form__field select,
+body:not(.dark) .invoice-items__row input {
+  border-color: rgba(124, 93, 250, 0.18);
 }
 
 .invoice-form__field input:hover,
@@ -200,19 +207,6 @@
   font-size: 15px;
   font-weight: 700;
   color: var(--color-text-secondary);
-}
-
-.invoice-items__delete {
-  background: transparent;
-  border: none;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.invoice-items__delete:hover {
-  color: #ec5757;
-  transform: scale(1.05);
 }
 
 .invoice-items__delete:focus-visible {
@@ -344,6 +338,40 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: color 0.2s ease, transform 0.2s ease;
-  font-size: 18px;
-  font-weight: 700;
+}
+
+.invoice-items__delete-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.invoice-items__delete:hover {
+  color: #ec5757;
+  transform: scale(1.05);
+}
+
+.invoice-form__field select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-purple-primary) 50%),
+    linear-gradient(135deg, var(--color-purple-primary) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 40px;
+}
+
+.invoice-form__field input[type="date"] {
+  position: relative;
+  color-scheme: light dark;
+}
+
+.invoice-form__field input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.75;
+  cursor: pointer;
+  filter: hue-rotate(10deg) saturate(1.1);
 }
