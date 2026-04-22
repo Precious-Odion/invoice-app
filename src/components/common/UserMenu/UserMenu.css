@@ -22,12 +22,12 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  display: block;
 }
 
 .user-menu__avatar {
   object-fit: cover;
   object-position: center;
+  display: block;
 }
 
 .user-menu__initials {
