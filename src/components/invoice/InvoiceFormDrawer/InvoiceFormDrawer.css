@@ -378,7 +378,6 @@ body:not(.dark) .invoice-items__row input {
   padding-right: 40px;
   cursor: pointer;
 }
-
 .invoice-form__field select:hover {
   border-color: var(--color-purple-primary);
 }

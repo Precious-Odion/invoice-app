@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useInvoices } from "../../../context/InvoiceContext";
+import { DatePicker } from "../../common/DatePicker/DatePicker";
 import type { InvoiceFormValues, InvoiceItem } from "../../../types/invoice";
 import { Button } from "../../common/Button/Button";
 import "./InvoiceFormDrawer.css";
@@ -1014,18 +1015,15 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   >
                     Invoice Date
                   </label>
-                  <input
+
+                  <DatePicker
                     id="invoiceDate"
-                    type="date"
-                    className={
-                      errors.createdAt ? "invoice-form__input--error" : ""
-                    }
                     value={formValues.createdAt}
-                    onChange={(event) =>
-                      updateField("createdAt", event.target.value)
-                    }
+                    hasError={Boolean(errors.createdAt)}
+                    onChange={(value) => updateField("createdAt", value)}
                     onBlur={() => validateSingleField("createdAt")}
                   />
+
                   {errors.createdAt ? (
                     <p className="invoice-form__error">{errors.createdAt}</p>
                   ) : null}
@@ -1073,7 +1071,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 </label>
                 <input
                   id="projectDescription"
-                  placeholder="e.g. Graphic Design Service"
+                  placeholder="e.g. Web3 dApp Development service"
                   className={
                     errors.description ? "invoice-form__input--error" : ""
                   }
