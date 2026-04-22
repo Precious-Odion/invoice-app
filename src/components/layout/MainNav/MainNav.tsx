@@ -1,4 +1,5 @@
 import { useTheme } from "../../../context/ThemeContext";
+import { UserMenu } from "../../common/UserMenu/UserMenu";
 import "./MainNav.css";
 
 export function MainNav() {
@@ -32,11 +33,7 @@ export function MainNav() {
 
         <div className="main-nav__divider" />
 
-        <img
-          className="main-nav__avatar"
-          src="/avatar.jpeg"
-          alt="User avatar"
-        />
+        <UserMenu />
       </div>
     </nav>
   );
