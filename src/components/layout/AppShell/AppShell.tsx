@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { Sidebar } from "../Sidebar/Sidebar";
-import { TopBar } from "../TopBar/TopBar";
+import { MainNav } from "../MainNav/MainNav";
 import "./AppShell.css";
 
 interface AppShellProps {
@@ -10,8 +9,7 @@ interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
   return (
     <div className="app-shell">
-      <Sidebar />
-      <TopBar />
+      <MainNav />
       <main className="app-shell__content">{children}</main>
     </div>
   );
