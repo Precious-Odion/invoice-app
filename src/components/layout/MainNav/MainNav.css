@@ -10,6 +10,7 @@
   flex-direction: column;
   justify-content: space-between;
   z-index: 30;
+  overflow: hidden;
 }
 
 .main-nav__logo {
@@ -18,11 +19,13 @@
   position: relative;
   background: var(--color-purple-primary);
   border-radius: 0 20px 20px 0;
+  overflow: hidden;
 }
 
 .main-nav__logo-top {
   position: absolute;
   inset: 0 0 50% 0;
+  background: var(--color-purple-primary);
 }
 
 .main-nav__logo-bottom {
@@ -40,20 +43,34 @@
   height: 35px;
   background: white;
   border-radius: 50% 50% 60% 60%;
+  clip-path: polygon(50% 0%, 88% 22%, 75% 100%, 25% 100%, 12% 22%);
 }
 
 .main-nav__right {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding-bottom: 24px;
+  width: 100%;
 }
 
-.main-nav__divider {
-  width: 1px;
-  height: 40px;
-  background: #494e6e;
+.main-nav__theme {
+  width: 100%;
+  height: 88px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.main-nav__theme-icon {
+  position: relative;
+  display: block;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.main-nav__theme:hover .main-nav__theme-icon {
+  transform: scale(1.08);
 }
 
 .main-nav__theme-icon--light {
@@ -66,7 +83,7 @@
 .main-nav__theme-icon--dark {
   width: 18px;
   height: 18px;
-  background: #7e88c3;
+  background: #7288c3;
   border-radius: 50%;
 }
 
@@ -81,35 +98,69 @@
   background: var(--color-nav);
 }
 
+.main-nav__theme:hover .main-nav__theme-icon--dark {
+  background: #a5b2ff;
+}
+
+.main-nav__divider {
+  width: 100%;
+  height: 1px;
+  background: #494e6e;
+}
+
 .main-nav__avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  margin: 24px 0;
+  object-fit: cover;
 }
 
 @media (max-width: 767px) {
   .main-nav {
     flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
     height: 72px;
+    bottom: auto;
     border-radius: 0;
-    align-items: center;
-    padding: 0 16px;
   }
 
   .main-nav__logo {
     width: 72px;
     height: 72px;
+    border-radius: 0 20px 20px 0;
+  }
+
+  .main-nav__logo-mark {
+    top: 19px;
+    left: 24px;
+    width: 24px;
+    height: 24px;
   }
 
   .main-nav__right {
     flex-direction: row;
+    justify-content: flex-end;
+    width: auto;
+    height: 100%;
     margin-left: auto;
-    padding-bottom: 0;
+  }
+
+  .main-nav__theme {
+    width: 72px;
+    height: 72px;
   }
 
   .main-nav__divider {
     width: 1px;
+    height: 72px;
+  }
+
+  .main-nav__avatar {
+    width: 32px;
     height: 32px;
+    margin: 0 20px;
   }
 }

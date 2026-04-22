@@ -7,19 +7,18 @@ export function MainNav() {
 
   return (
     <nav className="main-nav">
-      {/* LOGO */}
       <div className="main-nav__logo">
         <div className="main-nav__logo-top" />
         <div className="main-nav__logo-bottom" />
         <div className="main-nav__logo-mark" />
       </div>
 
-      {/* RIGHT SIDE */}
       <div className="main-nav__right">
         <button
           className="main-nav__theme"
           onClick={toggleTheme}
-          aria-label="Toggle theme"
+          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          type="button"
         >
           <span
             className={`main-nav__theme-icon ${
@@ -27,6 +26,7 @@ export function MainNav() {
                 ? "main-nav__theme-icon--light"
                 : "main-nav__theme-icon--dark"
             }`}
+            aria-hidden="true"
           />
         </button>
 
@@ -35,7 +35,7 @@ export function MainNav() {
         <img
           className="main-nav__avatar"
           src="https://i.pravatar.cc/40?img=12"
-          alt="User"
+          alt="User avatar"
         />
       </div>
     </nav>
