@@ -85,7 +85,7 @@ export function UserMenu() {
             className="user-menu__item"
             onClick={() => fileInputRef.current?.click()}
           >
-            Change picture
+            Change profile picture
           </button>
 
           <button
