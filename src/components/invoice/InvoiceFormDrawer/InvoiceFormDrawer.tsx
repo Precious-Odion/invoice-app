@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useInvoices } from "../../../context/InvoiceContext";
 import { DatePicker } from "../../common/DatePicker/DatePicker";
+import { SelectMenu } from "../../common/SelectMenu/SelectMenu";
 import type { InvoiceFormValues, InvoiceItem } from "../../../types/invoice";
 import { Button } from "../../common/Button/Button";
 import "./InvoiceFormDrawer.css";
@@ -1038,22 +1039,21 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                   >
                     Payment Terms
                   </label>
-                  <select
+
+                  <SelectMenu
                     id="paymentTerms"
-                    className={
-                      errors.paymentTerms ? "invoice-form__input--error" : ""
-                    }
                     value={formValues.paymentTerms}
-                    onChange={(event) =>
-                      updateField("paymentTerms", Number(event.target.value))
-                    }
+                    hasError={Boolean(errors.paymentTerms)}
+                    onChange={(value) => updateField("paymentTerms", value)}
                     onBlur={() => validateSingleField("paymentTerms")}
-                  >
-                    <option value={1}>Net 1 Day</option>
-                    <option value={7}>Net 7 Days</option>
-                    <option value={14}>Net 14 Days</option>
-                    <option value={30}>Net 30 Days</option>
-                  </select>
+                    options={[
+                      { label: "Net 1 Day", value: 1 },
+                      { label: "Net 7 Days", value: 7 },
+                      { label: "Net 14 Days", value: 14 },
+                      { label: "Net 30 Days", value: 30 },
+                    ]}
+                  />
+
                   {errors.paymentTerms ? (
                     <p className="invoice-form__error">{errors.paymentTerms}</p>
                   ) : null}
