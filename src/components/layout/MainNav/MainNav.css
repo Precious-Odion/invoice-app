@@ -159,8 +159,17 @@
   }
 
   .main-nav__avatar {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     margin: 0 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-purple-primary);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .main-nav__avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 3px rgba(124, 93, 250, 0.2);
   }
 }

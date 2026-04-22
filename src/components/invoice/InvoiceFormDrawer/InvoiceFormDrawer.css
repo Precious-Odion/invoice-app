@@ -350,6 +350,19 @@ body:not(.dark) .invoice-items__row input {
   transform: scale(1.05);
 }
 
+.invoice-form__field input[type="date"] {
+  appearance: auto;
+  -webkit-appearance: auto;
+  color-scheme: light dark;
+  cursor: pointer;
+}
+
+.invoice-form__field input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.9;
+  cursor: pointer;
+  filter: none;
+}
+
 .invoice-form__field select {
   appearance: none;
   -webkit-appearance: none;
@@ -363,15 +376,14 @@ body:not(.dark) .invoice-items__row input {
   background-size: 6px 6px, 6px 6px;
   background-repeat: no-repeat;
   padding-right: 40px;
-}
-
-.invoice-form__field input[type="date"] {
-  position: relative;
-  color-scheme: light dark;
-}
-
-.invoice-form__field input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 0.75;
   cursor: pointer;
-  filter: hue-rotate(10deg) saturate(1.1);
+}
+
+.invoice-form__field select:hover {
+  border-color: var(--color-purple-primary);
+}
+
+.invoice-form__field select:focus {
+  border-color: var(--color-purple-primary);
+  box-shadow: 0 0 0 1px var(--color-purple-primary);
 }

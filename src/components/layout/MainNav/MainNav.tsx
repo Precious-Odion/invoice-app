@@ -34,7 +34,7 @@ export function MainNav() {
 
         <img
           className="main-nav__avatar"
-          src="https://i.pravatar.cc/40?img=12"
+          src="/avatar.jpeg"
           alt="User avatar"
         />
       </div>

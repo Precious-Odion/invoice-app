@@ -679,8 +679,11 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   const isPendingSubmitDisabled = !isPendingFormValid();
 
   return (
-    <section className="invoice-drawer">
-      <div className="invoice-drawer__panel">
+    <section className="invoice-drawer" onClick={closeDrawer}>
+      <div
+        className="invoice-drawer__panel"
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="invoice-drawer__scroll">
           <h1 className="invoice-drawer__title">
             {isEdit ? (
@@ -1201,7 +1204,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
         <footer className="invoice-drawer__footer">
           {isEdit ? (
             <>
-              <Button variant="secondary" onClick={() => navigate(-1)}>
+              <Button variant="secondary" onClick={closeDrawer}>
                 Cancel
               </Button>
               <Button
@@ -1222,7 +1225,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
             </>
           ) : (
             <>
-              <Button variant="light" onClick={() => navigate("/")}>
+              <Button variant="light" onClick={closeDrawer}>
                 Discard
               </Button>
               <div className="invoice-drawer__footer-right">
