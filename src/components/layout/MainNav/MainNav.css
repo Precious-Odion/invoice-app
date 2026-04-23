@@ -96,6 +96,11 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   margin: 16px 0 0;
   object-fit: cover;
   object-position: center;
