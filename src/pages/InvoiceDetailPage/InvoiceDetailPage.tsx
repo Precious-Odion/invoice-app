@@ -143,10 +143,19 @@ export function InvoiceDetailPage() {
 
               {invoice.items.map((item) => (
                 <div className="invoice-detail-card__table-row" key={item.id}>
-                  <span>{item.name}</span>
-                  <span>{item.quantity}</span>
-                  <span>{formatCurrency(item.price, invoice.currency)}</span>
-                  <span>{formatCurrency(item.total, invoice.currency)}</span>
+                  <div className="invoice-detail-card__item-main">
+                    <span className="invoice-detail-card__item-name">
+                      {item.name}
+                    </span>
+                    <span className="invoice-detail-card__item-meta">
+                      {item.quantity} x{" "}
+                      {formatCurrency(item.price, invoice.currency)}
+                    </span>
+                  </div>
+
+                  <span className="invoice-detail-card__item-total">
+                    {formatCurrency(item.total, invoice.currency)}
+                  </span>
                 </div>
               ))}
 

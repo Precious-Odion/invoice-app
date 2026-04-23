@@ -264,19 +264,37 @@ body:not(.dark) .invoice-items__row input {
     right: 0;
     bottom: 0;
     left: 0;
-    background: var(--color-bg);
+    background: rgba(12, 14, 22, 0.55);
+    justify-content: flex-start;
   }
 
   .invoice-drawer__panel {
-    width: 100%;
+    width: calc(100vw - 40px);
+    max-width: 620px;
     height: calc(100vh - 72px);
-    border-radius: 0;
-    box-shadow: none;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   }
 
   .invoice-drawer__scroll {
     padding: 32px 24px 140px;
   }
+
+  .invoice-items__header,
+.invoice-items__row {
+  grid-template-columns: minmax(110px, 1fr) 40px 70px 70px 20px;
+}
+
+.invoice-items__row p,
+.invoice-items__header span {
+  min-width: 0;
+}
+
+.invoice-items__row p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
   .invoice-form__summary-error {
     padding: 0 24px 16px;
@@ -288,39 +306,46 @@ body:not(.dark) .invoice-items__row input {
     gap: 16px;
   }
 
-  .invoice-form__row--triple .invoice-form__field--full,
+  .invoice-form__row--triple > .invoice-form__field:last-child,
   .invoice-form__field--full {
     grid-column: 1 / -1;
   }
 
-  .invoice-form__row--triple > .invoice-form__field:last-child {
-    grid-column: 1 / -1;
+  .invoice-items {
+    display: block;
   }
 
- .invoice-items {
-  overflow-x: auto;
-}
+  .invoice-items__header,
+  .invoice-items__row {
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) 44px 72px 72px 20px;
+    gap: 12px;
+    align-items: center;
+  }
 
-.invoice-items__header,
-.invoice-items__row {
-  display: grid;
-  grid-template-columns: minmax(140px, 1fr) 56px 88px 88px 24px;
-  gap: 10px;
-  align-items: center;
-  min-width: 430px;
-}
+  .invoice-items__header {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
 
-.invoice-items__header {
-  font-size: 11px;
-}
+  .invoice-items__row {
+    padding-bottom: 16px;
+  }
 
-.invoice-items__row {
-  padding-bottom: 12px;
-}
+  .invoice-items__row p {
+    text-align: left;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-.invoice-items__row p {
-  text-align: left;
-}
+  .invoice-items__row input {
+    min-width: 0;
+  }
+
+  .invoice-items__delete {
+    justify-self: end;
+  }
 
   .invoice-drawer__footer {
     position: fixed;
