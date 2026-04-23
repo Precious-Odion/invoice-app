@@ -78,17 +78,28 @@ export function InvoiceProvider({ children }: InvoiceProviderProps) {
     if (typeof window === "undefined") {
       return seedInvoices;
     }
-
     const savedInvoices = window.localStorage.getItem(INVOICES_STORAGE_KEY);
 
     if (!savedInvoices) {
+      window.localStorage.setItem(
+        INVOICES_STORAGE_KEY,
+        JSON.stringify(seedInvoices),
+      );
       return seedInvoices;
     }
 
     try {
       const parsedInvoices = JSON.parse(savedInvoices) as Invoice[];
-      return parsedInvoices.length > 0 ? parsedInvoices : seedInvoices;
+
+      return parsedInvoices.map((invoice) => ({
+        ...invoice,
+        currency: invoice.currency || "GBP",
+      }));
     } catch {
+      window.localStorage.setItem(
+        INVOICES_STORAGE_KEY,
+        JSON.stringify(seedInvoices),
+      );
       return seedInvoices;
     }
   });

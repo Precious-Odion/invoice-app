@@ -27,7 +27,9 @@ export function InvoiceCard({ invoice }: InvoiceCardProps) {
       </div>
 
       <div className="invoice-card__group invoice-card__group--right">
-        <p className="invoice-card__amount">{formatCurrency(invoice.total)}</p>
+        <p className="invoice-card__amount">
+          {formatCurrency(invoice.total, invoice.currency)}
+        </p>
         <InvoiceStatusBadge status={invoice.status} />
         <span className="invoice-card__arrow" aria-hidden="true">
           ›

@@ -7,7 +7,7 @@ export function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -50,12 +50,30 @@ export function LoginPage() {
 
           <label className="auth-form__field">
             <span>Password</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
+            <div className="auth-form__password">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="auth-form__toggle"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? (
+                  <svg width="18" height="18">
+                    ...
+                  </svg>
+                ) : (
+                  <svg width="18" height="18">
+                    ...
+                  </svg>
+                )}
+              </button>
+            </div>
           </label>
 
           {error ? <p className="auth-form__error">{error}</p> : null}

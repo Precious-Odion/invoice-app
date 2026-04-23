@@ -145,14 +145,16 @@ export function InvoiceDetailPage() {
                 <div className="invoice-detail-card__table-row" key={item.id}>
                   <span>{item.name}</span>
                   <span>{item.quantity}</span>
-                  <span>{formatCurrency(item.price)}</span>
-                  <span>{formatCurrency(item.total)}</span>
+                  <span>{formatCurrency(item.price, invoice.currency)}</span>
+                  <span>{formatCurrency(item.total, invoice.currency)}</span>
                 </div>
               ))}
 
               <div className="invoice-detail-card__total-row">
                 <span>Amount Due</span>
-                <strong>{formatCurrency(invoice.total)}</strong>
+                <strong>
+                  {formatCurrency(invoice.total, invoice.currency)}
+                </strong>
               </div>
             </section>
           </article>

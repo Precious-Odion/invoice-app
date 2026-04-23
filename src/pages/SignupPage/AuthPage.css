@@ -85,3 +85,28 @@
   color: var(--color-purple-primary);
   font-weight: 700;
 }
+
+.auth-form__password {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-form__password input {
+  width: 100%;
+  padding-right: 48px; /* space for icon */
+}
+
+.auth-form__toggle {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
+.auth-form__toggle:hover {
+  color: var(--color-purple-primary);
+}

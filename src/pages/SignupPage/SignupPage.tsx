@@ -9,6 +9,7 @@ export function SignupPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState("");
   const [error, setError] = useState("");
@@ -74,17 +75,55 @@ export function SignupPage() {
 
           <label className="auth-form__field">
             <span>Password</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
+            <div className="auth-form__password">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="auth-form__toggle"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? (
+                  <svg width="18" height="18">
+                    ...
+                  </svg>
+                ) : (
+                  <svg width="18" height="18">
+                    ...
+                  </svg>
+                )}
+              </button>
+            </div>
           </label>
 
           <label className="auth-form__field">
             <span>Profile picture</span>
-            <input type="file" accept="image/*" onChange={handleAvatarChange} />
+
+            <div className="auth-form__upload-row">
+              <label
+                htmlFor="avatarUpload"
+                className="auth-form__upload-button"
+              >
+                Choose picture
+              </label>
+
+              <span className="auth-form__upload-name">
+                {avatar ? "Image selected" : "No file chosen"}
+              </span>
+            </div>
+
+            <input
+              id="avatarUpload"
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleAvatarChange}
+            />
           </label>
 
           {error ? <p className="auth-form__error">{error}</p> : null}

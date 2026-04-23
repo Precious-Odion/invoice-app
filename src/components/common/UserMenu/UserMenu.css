@@ -3,8 +3,8 @@
 }
 
 .user-menu__trigger {
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   border: none;
   background: transparent;
@@ -19,8 +19,8 @@
 
 .user-menu__avatar,
 .user-menu__initials {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
 }
 
@@ -40,15 +40,20 @@
 }
 
 .user-menu__dropdown {
-  position: absolute;
-  bottom: 0;
-  left: calc(100% + 12px);
+  position: fixed; 
+  bottom: 18px;
+  left: 96px;
   width: 220px;
+
   background: var(--color-surface);
   border-radius: 8px;
   box-shadow: 0 10px 20px rgba(72, 84, 159, 0.25);
   padding: 12px;
-  z-index: 200;
+
+  z-index: 9999; 
+
+  transform-origin: left center;
+  animation: user-menu-fade 0.18s ease;
 }
 
 .user-menu__trigger:hover {
@@ -103,12 +108,9 @@
     right: 0;
     bottom: auto;
     top: calc(100% + 12px);
+    transform: none;
+    width: 220px;
   }
-}
-
-.user-menu__dropdown {
-  transform-origin: left bottom;
-  animation: user-menu-fade 0.18s ease;
 }
 
 @keyframes user-menu-fade {
@@ -119,5 +121,16 @@
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

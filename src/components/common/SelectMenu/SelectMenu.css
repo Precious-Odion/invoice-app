@@ -1,6 +1,11 @@
 .select-menu {
   position: relative;
   width: 100%;
+  z-index: 1;
+}
+
+.select-menu--open {
+  z-index: 20;
 }
 
 .select-menu__trigger {
@@ -95,3 +100,4 @@
 body:not(.dark) .select-menu__trigger {
   border-color: rgba(124, 93, 250, 0.18);
 }
+

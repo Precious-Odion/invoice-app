@@ -86,7 +86,7 @@
 }
 
 .invoice-form__row--triple {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .invoice-form__row--double {
@@ -370,4 +370,10 @@ body:not(.dark) .invoice-items__row input {
 .invoice-form__field select:focus {
   border-color: var(--color-purple-primary);
   box-shadow: 0 0 0 1px var(--color-purple-primary);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

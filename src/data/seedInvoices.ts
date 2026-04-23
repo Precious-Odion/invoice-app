@@ -10,6 +10,7 @@ export const seedInvoices: Invoice[] = [
     clientName: 'Jensen Huang',
     clientEmail: 'jensen@example.com',
     status: 'paid',
+    currency: 'GBP',
     senderAddress: {
       street: '19 Union Terrace',
       city: 'London',
@@ -42,6 +43,7 @@ export const seedInvoices: Invoice[] = [
   clientName: 'Alex Grim',
   clientEmail: 'alexgrim@mail.com',
   status: 'pending',
+  currency: 'GBP',
   senderAddress: {
     street: '19 Union Terrace',
     city: 'London',
@@ -81,6 +83,7 @@ export const seedInvoices: Invoice[] = [
     clientName: 'John Morrison',
     clientEmail: 'john@example.com',
     status: 'paid',
+    currency: 'GBP',
     senderAddress: {
       street: '19 Union Terrace',
       city: 'London',
@@ -113,6 +116,7 @@ export const seedInvoices: Invoice[] = [
     clientName: 'Alysa Werner',
     clientEmail: 'alysa@example.com',
     status: 'pending',
+    currency: 'GBP',
     senderAddress: {
       street: '19 Union Terrace',
       city: 'London',
@@ -145,6 +149,7 @@ export const seedInvoices: Invoice[] = [
     clientName: 'Mellisa Clarke',
     clientEmail: 'mellisa@example.com',
     status: 'pending',
+    currency: 'GBP',
     senderAddress: {
       street: '19 Union Terrace',
       city: 'London',
@@ -177,6 +182,7 @@ export const seedInvoices: Invoice[] = [
     clientName: 'Thomas Wayne',
     clientEmail: 'thomas@example.com',
     status: 'pending',
+    currency: 'GBP',
     senderAddress: {
       street: '19 Union Terrace',
       city: 'London',
@@ -209,6 +215,7 @@ export const seedInvoices: Invoice[] = [
     clientName: 'Anita Wainwright',
     clientEmail: 'anita@example.com',
     status: 'draft',
+    currency: 'GBP',
     senderAddress: {
       street: '19 Union Terrace',
       city: 'London',

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useInvoices } from "../../../context/InvoiceContext";
 import { DatePicker } from "../../common/DatePicker/DatePicker";
@@ -19,6 +19,7 @@ interface FormErrors {
   paymentTerms?: string;
   senderStreet?: string;
   senderCity?: string;
+  currency?: string;
   senderPostCode?: string;
   senderCountry?: string;
   clientStreet?: string;
@@ -47,6 +48,7 @@ function createInitialValues(): InvoiceFormValues {
     clientName: "",
     clientEmail: "",
     status: "pending",
+    currency: "GBP",
     senderAddress: {
       street: "",
       city: "",
@@ -83,6 +85,37 @@ function isValidDescription(value: string) {
   return /^[A-Za-z0-9\s,.'&()/-]+$/.test(value.trim());
 }
 
+function parseCurrencyInput(value: string): number {
+  const cleaned = value.replace(/[^\d.]/g, "");
+  const parts = cleaned.split(".");
+
+  if (parts.length > 2) {
+    return Number(`${parts[0]}.${parts.slice(1).join("")}`) || 0;
+  }
+
+  return Number(cleaned) || 0;
+}
+
+function getCurrencySymbol(currency: "GBP" | "USD" | "EUR" | "NGN" | "CAD") {
+  const symbolMap = {
+    GBP: "£",
+    USD: "$",
+    EUR: "€",
+    NGN: "₦",
+    CAD: "C$",
+  };
+
+  return symbolMap[currency];
+}
+
+function formatPriceForInput(
+  value: number,
+  currency: "GBP" | "USD" | "EUR" | "NGN" | "CAD",
+) {
+  if (!value) return "";
+  return `${getCurrencySymbol(currency)}${value.toFixed(2)}`;
+}
+
 export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -101,6 +134,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       clientName: invoice.clientName,
       clientEmail: invoice.clientEmail,
       status: invoice.status,
+      currency: invoice.currency || "GBP",
       senderAddress: invoice.senderAddress,
       clientAddress: invoice.clientAddress,
       items: invoice.items,
@@ -119,7 +153,25 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   const [formValues, setFormValues] =
     useState<InvoiceFormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [priceInputs, setPriceInputs] = useState<Record<string, string>>({});
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    setPriceInputs((prev) => {
+      const next = { ...prev };
+
+      formValues.items.forEach((item: InvoiceItem) => {
+        if (!(item.id in next)) {
+          next[item.id] =
+            item.price > 0
+              ? formatPriceForInput(item.price, formValues.currency || "GBP")
+              : "";
+        }
+      });
+
+      return next;
+    });
+  }, [formValues.items]);
 
   const isEdit = mode === "edit";
 
@@ -242,6 +294,52 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     }));
   };
 
+  const handlePriceInputChange = (itemId: string, rawValue: string) => {
+    const sanitizedValue = rawValue.replace(/[^0-9.]/g, "");
+
+    setPriceInputs((current) => ({
+      ...current,
+      [itemId]: sanitizedValue,
+    }));
+
+    const parsedValue = parseCurrencyInput(sanitizedValue);
+
+    setFormValues((current) => ({
+      ...current,
+      items: current.items.map((item) => {
+        if (item.id !== itemId) {
+          return item;
+        }
+
+        return {
+          ...item,
+          price: parsedValue,
+          total: Number(item.quantity) * parsedValue,
+        };
+      }),
+    }));
+
+    setErrors((current) => ({
+      ...current,
+      items: undefined,
+      summary: undefined,
+    }));
+  };
+
+  const handlePriceInputBlur = (
+    itemId: string,
+    currency: InvoiceFormValues["currency"],
+  ) => {
+    const rawValue = priceInputs[itemId] ?? "";
+    const parsedValue = parseCurrencyInput(rawValue);
+
+    setPriceInputs((current) => ({
+      ...current,
+      [itemId]:
+        parsedValue > 0 ? formatPriceForInput(parsedValue, currency) : "",
+    }));
+  };
+
   const addItem = () => {
     setFormValues((current) => ({
       ...current,
@@ -338,6 +436,14 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
         }
         break;
 
+      case "currency":
+        if (
+          !["GBP", "USD", "EUR", "NGN", "CAD"].includes(formValues.currency)
+        ) {
+          errorMessage = "Select a valid currency";
+        }
+        break;
+
       case "clientStreet":
         if (!formValues.clientAddress.street.trim()) {
           errorMessage = "Client street can't be empty";
@@ -421,6 +527,10 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       nextErrors.senderCountry = "Sender country contains invalid characters";
     }
 
+    if (!["GBP", "USD", "EUR", "NGN", "CAD"].includes(formValues.currency)) {
+      nextErrors.currency = "Select a valid currency";
+    }
+
     if (
       formValues.clientAddress.street.trim() &&
       !isValidStreet(formValues.clientAddress.street)
@@ -485,6 +595,10 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
     const hasValidCreatedAt = formValues.createdAt.trim();
 
+    const hasValidCurrency = ["GBP", "USD", "EUR", "NGN", "CAD"].includes(
+      formValues.currency,
+    );
+
     const hasValidPaymentTerms = [1, 7, 14, 30].includes(
       formValues.paymentTerms,
     );
@@ -526,6 +640,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       Boolean(hasValidDescription) &&
       Boolean(hasValidCreatedAt) &&
       hasValidPaymentTerms &&
+      hasValidCurrency &&
       Boolean(hasValidSenderStreet) &&
       Boolean(hasValidSenderCity) &&
       Boolean(hasValidSenderPostCode) &&
@@ -547,6 +662,10 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
         nextErrors.clientName = "Client's name can't be empty";
       } else if (!isValidName(formValues.clientName)) {
         nextErrors.clientName = "Client's name contains invalid characters";
+      }
+
+      if (!["GBP", "USD", "EUR", "NGN", "CAD"].includes(formValues.currency)) {
+        nextErrors.currency = "Select a valid currency";
       }
 
       if (!formValues.clientEmail.trim()) {
@@ -1006,7 +1125,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                 </div>
               </div>
 
-              <div className="invoice-form__row invoice-form__row--double">
+              <div className="invoice-form__row invoice-form__row--triple">
                 <div className="invoice-form__field">
                   <label
                     htmlFor="invoiceDate"
@@ -1044,7 +1163,9 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                     id="paymentTerms"
                     value={formValues.paymentTerms}
                     hasError={Boolean(errors.paymentTerms)}
-                    onChange={(value) => updateField("paymentTerms", value)}
+                    onChange={(value) =>
+                      updateField("paymentTerms", Number(value))
+                    }
                     onBlur={() => validateSingleField("paymentTerms")}
                     options={[
                       { label: "Net 1 Day", value: 1 },
@@ -1056,6 +1177,40 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
 
                   {errors.paymentTerms ? (
                     <p className="invoice-form__error">{errors.paymentTerms}</p>
+                  ) : null}
+                </div>
+
+                <div className="invoice-form__field">
+                  <label
+                    htmlFor="currency"
+                    className={
+                      errors.currency ? "invoice-form__label--error" : ""
+                    }
+                  >
+                    Currency
+                  </label>
+
+                  <SelectMenu
+                    id="currency"
+                    value={formValues.currency}
+                    hasError={Boolean(errors.currency)}
+                    onChange={(value) =>
+                      updateField(
+                        "currency",
+                        value as InvoiceFormValues["currency"],
+                      )
+                    }
+                    options={[
+                      { label: "GBP (£)", value: "GBP" },
+                      { label: "USD ($)", value: "USD" },
+                      { label: "EUR (€)", value: "EUR" },
+                      { label: "NGN (₦)", value: "NGN" },
+                      { label: "CAD (C$)", value: "CAD" },
+                    ]}
+                  />
+
+                  {errors.currency ? (
+                    <p className="invoice-form__error">{errors.currency}</p>
                   ) : null}
                 </div>
               </div>
@@ -1138,25 +1293,31 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
                         }
                       />
                       <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        placeholder="0.00"
+                        type="text"
+                        inputMode="decimal"
+                        placeholder={`${getCurrencySymbol(formValues.currency || "GBP")}0.00`}
                         className={
                           priceHasError ? "invoice-form__input--error" : ""
                         }
-                        value={item.price === 0 ? "" : String(item.price)}
+                        value={priceInputs[item.id] ?? ""}
                         onChange={(event) =>
-                          updateItemField(
+                          handlePriceInputChange(item.id, event.target.value)
+                        }
+                        onBlur={() =>
+                          handlePriceInputBlur(
                             item.id,
-                            "price",
-                            event.target.value === ""
-                              ? 0
-                              : Number(event.target.value),
+                            formValues.currency || "GBP",
                           )
                         }
                       />
-                      <p>{item.total.toFixed(2)}</p>
+                      <p>
+                        {new Intl.NumberFormat("en", {
+                          style: "currency",
+                          currency: formValues.currency,
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(item.total)}
+                      </p>
                       <button
                         type="button"
                         className="invoice-items__delete"

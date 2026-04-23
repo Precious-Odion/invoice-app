@@ -1,16 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./SelectMenu.css";
 
+type SelectValue = string | number;
+
 interface SelectOption {
   label: string;
-  value: number;
+  value: SelectValue;
 }
 
 interface SelectMenuProps {
   id: string;
-  value: number;
+  value: SelectValue;
   options: SelectOption[];
-  onChange: (value: number) => void;
+  onChange: (value: SelectValue) => void;
   hasError?: boolean;
   onBlur?: () => void;
 }
@@ -35,14 +37,12 @@ export function SelectMenu({
     function handlePointerDown(event: MouseEvent) {
       if (!wrapperRef.current?.contains(event.target as Node)) {
         setIsOpen(false);
-        onBlur?.();
       }
     }
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setIsOpen(false);
-        onBlur?.();
       }
     }
 
@@ -56,7 +56,10 @@ export function SelectMenu({
   }, [onBlur]);
 
   return (
-    <div className="select-menu" ref={wrapperRef}>
+    <div
+      className={`select-menu ${isOpen ? "select-menu--open" : ""}`}
+      ref={wrapperRef}
+    >
       <button
         id={id}
         type="button"
@@ -85,7 +88,7 @@ export function SelectMenu({
 
             return (
               <button
-                key={option.value}
+                key={String(option.value)}
                 type="button"
                 className={`select-menu__option ${
                   selected ? "select-menu__option--selected" : ""
@@ -93,7 +96,6 @@ export function SelectMenu({
                 onClick={() => {
                   onChange(option.value);
                   setIsOpen(false);
-                  onBlur?.();
                 }}
               >
                 {option.label}

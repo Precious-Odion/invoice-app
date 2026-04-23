@@ -8,13 +8,15 @@ export function MainNav() {
 
   return (
     <nav className="main-nav">
-      <div className="main-nav__logo">
-        <div className="main-nav__logo-top" />
-        <div className="main-nav__logo-bottom" />
-        <div className="main-nav__logo-mark" />
+      <div className="main-nav__top">
+        <div className="main-nav__logo">
+          <div className="main-nav__logo-top" />
+          <div className="main-nav__logo-bottom" />
+          <div className="main-nav__logo-mark" />
+        </div>
       </div>
 
-      <div className="main-nav__right">
+      <div className="main-nav__bottom">
         <button
           className="main-nav__theme"
           onClick={toggleTheme}
@@ -27,13 +29,14 @@ export function MainNav() {
                 ? "main-nav__theme-icon--light"
                 : "main-nav__theme-icon--dark"
             }`}
-            aria-hidden="true"
           />
         </button>
 
         <div className="main-nav__divider" />
 
-        <UserMenu />
+        <div className="main-nav__avatar-slot">
+          <UserMenu />
+        </div>
       </div>
     </nav>
   );

@@ -1,5 +1,7 @@
 export type InvoiceStatus = "draft" | "pending" | "paid";
 
+export type InvoiceCurrency = "GBP" | "USD" | "EUR" | "NGN" | "CAD";
+
 export interface InvoiceItem {
   id: string;
   name: string;
@@ -24,6 +26,7 @@ export interface Invoice {
   clientName: string;
   clientEmail: string;
   status: InvoiceStatus;
+  currency: InvoiceCurrency;
   senderAddress: Address;
   clientAddress: Address;
   items: InvoiceItem[];
@@ -37,6 +40,7 @@ export interface InvoiceFormValues {
   clientName: string;
   clientEmail: string;
   status: InvoiceStatus;
+  currency: InvoiceCurrency;
   senderAddress: Address;
   clientAddress: Address;
   items: InvoiceItem[];

@@ -64,6 +64,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return { success: false, message: "Signup unavailable" };
     }
 
+    const normalizedEmail = payload.email.trim().toLowerCase();
+
     const existingRaw = window.localStorage.getItem(AUTH_USER_KEY);
     const existingUser = existingRaw
       ? (JSON.parse(existingRaw) as AuthUser)
@@ -71,7 +73,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (
       existingUser &&
-      existingUser.email.toLowerCase() === payload.email.toLowerCase()
+      existingUser.email.trim().toLowerCase() === normalizedEmail
     ) {
       return {
         success: false,
@@ -79,8 +81,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
       };
     }
 
-    window.localStorage.setItem(AUTH_USER_KEY, JSON.stringify(payload));
-    setUser(payload);
+    const normalizedPayload = {
+      ...payload,
+      email: normalizedEmail,
+    };
+
+    window.localStorage.setItem(
+      AUTH_USER_KEY,
+      JSON.stringify(normalizedPayload),
+    );
+
+    setUser(normalizedPayload);
 
     return { success: true };
   };
@@ -100,8 +111,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     const existingUser = JSON.parse(existingRaw) as AuthUser;
+    const normalizedEmail = payload.email.trim().toLowerCase();
 
-    if (existingUser.email.toLowerCase() !== payload.email.toLowerCase()) {
+    if (existingUser.email.trim().toLowerCase() !== normalizedEmail) {
       return { success: false, message: "Email not found." };
     }
 
@@ -110,6 +122,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     setUser(existingUser);
+
     return { success: true };
   };
 
