@@ -264,16 +264,18 @@ body:not(.dark) .invoice-items__row input {
     right: 0;
     bottom: 0;
     left: 0;
+    background: var(--color-bg);
   }
 
   .invoice-drawer__panel {
     width: 100%;
     height: calc(100vh - 72px);
     border-radius: 0;
+    box-shadow: none;
   }
 
   .invoice-drawer__scroll {
-    padding: 32px 24px 120px;
+    padding: 32px 24px 140px;
   }
 
   .invoice-form__summary-error {
@@ -283,10 +285,15 @@ body:not(.dark) .invoice-items__row input {
   .invoice-form__row--triple,
   .invoice-form__row--double {
     grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
 
-  .invoice-form__row--triple .invoice-form__field:last-child,
+  .invoice-form__row--triple .invoice-form__field--full,
   .invoice-form__field--full {
+    grid-column: 1 / -1;
+  }
+
+  .invoice-form__row--triple > .invoice-form__field:last-child {
     grid-column: 1 / -1;
   }
 
@@ -311,10 +318,12 @@ body:not(.dark) .invoice-items__row input {
     bottom: 0;
     padding: 20px 24px;
     border-radius: 0;
+    justify-content: space-between;
   }
 
   .invoice-drawer__footer-right {
     margin-left: auto;
+    gap: 8px;
   }
 }
 

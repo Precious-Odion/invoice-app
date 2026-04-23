@@ -34,12 +34,24 @@
 
 @media (max-width: 767px) {
   .invoice-list-page__header {
-    gap: 16px;
+    align-items: flex-start;
+    gap: 18px;
     margin-bottom: 32px;
   }
 
   .invoice-list-page__actions {
     gap: 18px;
+    margin-left: auto;
+  }
+
+  .invoice-list-page__title {
+    font-size: 32px;
+    margin-bottom: 6px;
+  }
+
+  .invoice-list-page__subtitle {
+    max-width: 110px;
+    line-height: 1.4;
   }
 
   .invoice-list-page .button__label {
@@ -47,14 +59,7 @@
   }
 
   .invoice-list-page .button__label::after {
-    content: 'New';
+    content: "New";
     font-size: 15px;
   }
 }
-
-.invoice-list-page__list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-

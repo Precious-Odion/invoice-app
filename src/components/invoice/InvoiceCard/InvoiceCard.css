@@ -61,17 +61,62 @@
   color: var(--color-purple-primary);
   font-size: 22px;
 }
+
 .invoice-card:focus-visible {
   border-color: var(--color-purple-primary);
   outline: none;
 }
 
-.invoice-detail-page__back-link,
-.invoice-list-page__back-link {
-  transition: color 0.2s ease;
-}
+@media (max-width: 767px) {
+  .invoice-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "id amount"
+      "name status"
+      "due status";
+    gap: 10px 18px;
+    padding: 24px;
+    align-items: center;
+  }
 
-.invoice-detail-page__back-link:hover,
-.invoice-list-page__back-link:hover {
-  color: var(--color-purple-primary);
+  .invoice-card__group--left,
+  .invoice-card__group--right {
+    display: contents;
+  }
+
+  .invoice-card__id {
+    grid-area: id;
+    min-width: 0;
+  }
+
+  .invoice-card__amount {
+    grid-area: amount;
+    min-width: 0;
+    text-align: right;
+  }
+
+  .invoice-card__client-name {
+    grid-area: name;
+    min-width: 0;
+  }
+
+  .invoice-card__due-date {
+    grid-area: due;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .invoice-card :is(.invoice-status-badge, .status-badge) {
+    grid-area: status;
+    justify-self: end;
+  }
+
+  .invoice-card__arrow {
+    display: none;
+  }
+
+  .invoice-card__due-date span {
+    display: block;
+  }
 }
