@@ -186,47 +186,55 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
   useEffect(() => {
-    const panel = document.querySelector(".invoice-drawer__panel");
+    const panel = document.querySelector(
+      ".invoice-drawer__panel",
+    ) as HTMLElement | null;
 
     if (!panel) return;
 
     const focusable = panel.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
     );
 
-    if (focusable.length === 0) return;
+    if (focusable.length === 0) {
+      panel.focus();
+      return;
+    }
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
 
-    // Initial focus
     first.focus();
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
         closeDrawer();
         return;
       }
 
-      if (e.key !== "Tab") return;
+      if (event.key !== "Tab") return;
 
-      if (e.shiftKey) {
-        if (document.activeElement === first) {
-          e.preventDefault();
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey) {
+        if (activeElement === first) {
+          event.preventDefault();
           last.focus();
         }
-      } else {
-        if (document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
+        return;
+      }
+
+      if (activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
-    const handleFocusIn = (e: FocusEvent) => {
-      if (!panel.contains(e.target as Node)) {
-        e.stopPropagation();
+    const handleFocusIn = (event: FocusEvent) => {
+      if (!panel.contains(event.target as Node)) {
+        event.stopPropagation();
         first.focus();
       }
     };
@@ -247,6 +255,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       <section className="invoice-drawer" onClick={closeDrawer}>
         <div
           className="invoice-drawer__panel"
+          tabIndex={-1}
           onClick={(event) => event.stopPropagation()}
         >
           <div className="invoice-drawer__scroll">
@@ -870,6 +879,7 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     <section className="invoice-drawer" onClick={closeDrawer}>
       <div
         className="invoice-drawer__panel"
+        tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="invoice-drawer__scroll">

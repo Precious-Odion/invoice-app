@@ -2,7 +2,7 @@ import {
   useEffect,
   useId,
   useRef,
-  type KeyboardEvent,
+  // type KeyboardEvent,
   type ReactNode,
 } from "react";
 import "./Modal.css";
@@ -27,15 +27,7 @@ export function Modal({ title, children, actions, onClose }: ModalProps) {
       return;
     }
 
-    document.body.setAttribute("aria-hidden", "true");
-
-    const focusableElements = modalElement.querySelectorAll<
-      | HTMLButtonElement
-      | HTMLAnchorElement
-      | HTMLInputElement
-      | HTMLSelectElement
-      | HTMLTextAreaElement
-    >(
+    const focusableElements = modalElement.querySelectorAll<HTMLElement>(
       'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
     );
 
@@ -49,15 +41,13 @@ export function Modal({ title, children, actions, onClose }: ModalProps) {
 
     firstFocusable.focus();
 
-    const handleKeyDown = (event: KeyboardEvent | globalThis.KeyboardEvent) => {
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
         return;
       }
 
-      if (event.key !== "Tab") {
-        return;
-      }
+      if (event.key !== "Tab") return;
 
       const activeElement = document.activeElement;
 
@@ -88,8 +78,6 @@ export function Modal({ title, children, actions, onClose }: ModalProps) {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("focusin", handleFocusIn);
-
-      document.body.removeAttribute("aria-hidden");
     };
   }, [onClose]);
 

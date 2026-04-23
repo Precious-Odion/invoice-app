@@ -22,6 +22,7 @@
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  touch-action: pan-y;
 }
 
 .invoice-drawer__scroll {
@@ -283,20 +284,58 @@ body:not(.dark) .invoice-items__row input {
     padding: 32px 24px 140px;
   }
 
-  .invoice-items__header,
-.invoice-items__row {
-  grid-template-columns: minmax(110px, 1fr) 40px 70px 70px 20px;
+  .invoice-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
 }
 
+.invoice-items__header,
+.invoice-items__row {
+  display: grid;
+  grid-template-columns: minmax(88px, 1fr) 36px 60px 60px 24px;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+
+
+.invoice-items__header {
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.invoice-items__row {
+  padding-bottom: 12px;
+}
+
+.invoice-items__row input,
 .invoice-items__row p,
 .invoice-items__header span {
   min-width: 0;
 }
 
 .invoice-items__row p {
+  text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 13px;
+}
+
+.invoice-items__delete {
+  width: 24px;
+  height: 24px;
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.invoice-items__delete-icon {
+  width: 16px;
+  height: 16px;
 }
 
   .invoice-form__summary-error {
@@ -312,40 +351,6 @@ body:not(.dark) .invoice-items__row input {
   .invoice-form__row--triple > .invoice-form__field:last-child,
   .invoice-form__field--full {
     grid-column: 1 / -1;
-  }
-
-  .invoice-items {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    overflow: hidden;
-  }
-
-  .invoice-items__header,
-  .invoice-items__row {
-    display: grid;
-    grid-template-columns: minmax(88px, 1fr) 36px 60px 60px 24px;
-    gap: 8px;
-    width: 100%;
-    align-items: center;
-  }
-
-  .invoice-items__header {
-    font-size: 12px;
-    margin-bottom: 12px;
-  }
-
-  .invoice-items__row {
-    padding-bottom: 12px;
-  }
-
-  .invoice-items__row p {
-    text-align: left;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 13px;
   }
 
   .invoice-items__row input {

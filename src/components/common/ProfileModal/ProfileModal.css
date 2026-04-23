@@ -6,6 +6,8 @@
   place-items: center;
   padding: 24px;
   z-index: 250;
+  overscroll-behavior: contain;
+  touch-action: none;
 }
 
 .profile-modal {
@@ -16,6 +18,7 @@
   box-shadow: 0 24px 40px rgba(0, 0, 0, 0.25);
   padding: 28px;
   outline: none;
+  touch-action: auto;
 }
 
 .profile-modal__header {

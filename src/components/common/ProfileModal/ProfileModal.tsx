@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ChangeEvent } from "react";
 import { useAuth } from "../../../context/AuthContext";
+import { useLockBodyScroll } from "../../../hooks/useLockBodyScroll";
 import "./ProfileModal.css";
 
 interface ProfileModalProps {
@@ -12,25 +13,62 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useLockBodyScroll(isOpen);
+
   useEffect(() => {
     if (!isOpen) return;
 
-    function handleKeyDown(event: KeyboardEvent) {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusable = dialog.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    first?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
+        return;
       }
-    }
+
+      if (event.key !== "Tab" || focusable.length === 0) return;
+
+      const activeElement = document.activeElement;
+
+      if (event.shiftKey) {
+        if (activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        }
+        return;
+      }
+
+      if (activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+
+    const handleFocusIn = (event: FocusEvent) => {
+      if (!dialog.contains(event.target as Node)) {
+        event.stopPropagation();
+        first?.focus();
+      }
+    };
 
     document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("focusin", handleFocusIn);
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("focusin", handleFocusIn);
     };
   }, [isOpen, onClose]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    dialogRef.current?.focus();
-  }, [isOpen]);
 
   if (!isOpen || !user) return null;
 
