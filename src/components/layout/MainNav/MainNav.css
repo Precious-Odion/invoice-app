@@ -95,17 +95,12 @@
 .main-nav__avatar {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: 9999px;
   overflow: hidden;
+  aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  margin: 16px 0 0;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 2px solid var(--color-purple-primary);
 }
 
 @media (max-width: 767px) {

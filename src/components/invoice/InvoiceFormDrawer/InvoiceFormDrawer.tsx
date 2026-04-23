@@ -1366,21 +1366,25 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
               <Button variant="secondary" onClick={closeDrawer}>
                 Cancel
               </Button>
-              <Button
-                variant="primary"
-                disabled={
-                  invoice?.status === "pending"
-                    ? isPendingSubmitDisabled
-                    : false
-                }
-                onClick={() =>
-                  handleSubmit(
-                    invoice?.status === "draft" ? "draft" : "pending",
-                  )
-                }
-              >
-                Save Changes
-              </Button>
+
+              <div className="invoice-drawer__footer-right">
+                {invoice?.status === "draft" ? (
+                  <Button
+                    variant="secondary"
+                    onClick={() => handleSubmit("draft")}
+                  >
+                    Save as Draft
+                  </Button>
+                ) : null}
+
+                <Button
+                  variant="primary"
+                  disabled={isPendingSubmitDisabled}
+                  onClick={() => handleSubmit("pending")}
+                >
+                  Save Changes
+                </Button>
+              </div>
             </>
           ) : (
             <>
