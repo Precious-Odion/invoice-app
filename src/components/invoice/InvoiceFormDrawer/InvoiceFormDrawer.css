@@ -297,19 +297,30 @@ body:not(.dark) .invoice-items__row input {
     grid-column: 1 / -1;
   }
 
-  .invoice-items__header {
-    display: none;
-  }
+ .invoice-items {
+  overflow-x: auto;
+}
 
-  .invoice-items__row {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding-bottom: 16px;
-  }
+.invoice-items__header,
+.invoice-items__row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) 56px 88px 88px 24px;
+  gap: 10px;
+  align-items: center;
+  min-width: 430px;
+}
 
-  .invoice-items__row p {
-    text-align: left;
-  }
+.invoice-items__header {
+  font-size: 11px;
+}
+
+.invoice-items__row {
+  padding-bottom: 12px;
+}
+
+.invoice-items__row p {
+  text-align: left;
+}
 
   .invoice-drawer__footer {
     position: fixed;

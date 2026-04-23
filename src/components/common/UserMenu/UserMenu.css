@@ -110,6 +110,12 @@
     top: calc(100% + 12px);
     transform: none;
     width: 220px;
+    position: absolute;
+    z-index: 9999;
+  }
+
+  .user-menu {
+    position: relative;
   }
 }
 

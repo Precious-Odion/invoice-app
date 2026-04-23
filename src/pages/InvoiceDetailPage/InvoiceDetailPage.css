@@ -184,11 +184,25 @@
   }
 
   .invoice-detail-card__table-head {
-    display: none;
-  }
+  display: grid;
+  grid-template-columns: 1fr 56px 88px 88px;
+  gap: 12px;
+  padding: 20px 16px 12px;
+  font-size: 11px;
+}
 
-  .invoice-detail-card__table-row {
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-  }
+.invoice-detail-card__table-row {
+  grid-template-columns: 1fr 56px 88px 88px;
+  gap: 12px;
+  padding: 16px;
+  font-size: 13px;
+}
+
+.invoice-detail-card__items {
+  overflow-x: auto;
+}
+
+.invoice-detail-card__total-row {
+  padding: 20px 16px;
+}
 }
