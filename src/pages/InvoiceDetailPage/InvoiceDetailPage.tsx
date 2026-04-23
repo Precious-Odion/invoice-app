@@ -126,7 +126,7 @@ export function InvoiceDetailPage() {
               </div>
 
               <div>
-                <p className="invoice-detail-card__label">Sent to</p>
+                <p className="invoice-detail-card__">Sent to</p>
                 <p className="invoice-detail-card__value">
                   {invoice.clientEmail}
                 </p>

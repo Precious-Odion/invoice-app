@@ -56,6 +56,19 @@ export function FilterDropdown() {
 
       {isOpen ? (
         <div className="filter-dropdown__menu">
+          <label className="filter-dropdown__option">
+            <input
+              type="checkbox"
+              checked={selectedFilters.length === 0}
+              onChange={() => {
+                clearFilters();
+                setIsOpen(false);
+              }}
+            />
+            <span className="filter-dropdown__checkbox" />
+            <span>All</span>
+          </label>
+
           {(["draft", "pending", "paid"] as const).map((option) => {
             const checked = selectedFilters.includes(option);
 
