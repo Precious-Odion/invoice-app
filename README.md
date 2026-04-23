@@ -1,295 +1,447 @@
-# 📄 Invoice Management App
+# Invoice Management App
 
-A fully responsive Invoice Management Application built with React, implementing complete CRUD functionality, draft/payment workflows, filtering, theming, and accessibility best practices.
+A fully responsive Invoice Management Application built with **React + TypeScript** that implements complete invoice CRUD flows, draft and payment status management, filtering, theme switching, authentication, multi-currency support, and accessibility-focused modal/drawer interactions.
+
+This project was built for the **Frontend Wizards — Stage 2 Task** and follows the recommended component architecture while also including a few practical enhancements beyond the base requirements.
 
 ---
 
-## 🚀 Live Demo
+## Live Demo
 
 https://invoice-app-production-f957.up.railway.app/
 
----
-
-## 📦 Repository
-
+GitHub Repository
 https://github.com/Precious-Odion/invoice-app
 
----
-
-# 🎯 Overview
-
+Overview
 This application allows users to:
 
-- Create, view, update, and delete invoices
-- Save invoices as Draft, Pending, or mark as Paid
+- Create invoices
+- Read and view invoice details
+- Update existing invoices
+- Delete invoices with confirmation
+- Save invoices as Draft
+- Submit completed invoices as Pending
+- Mark pending invoices as Paid
 - Filter invoices by status
-- Toggle between light and dark themes
-- Interact with a responsive UI across mobile, tablet, and desktop
-- Experience accessible modal and drawer interactions
+- Toggle between light and dark mode
+- Use the app across desktop, tablet, and mobile layouts
+- Interact with accessible modals and drawers
+- Persist invoice, theme, and auth state with localStorage
+  The project emphasizes:
+- clean structure
+- reusable components
+- responsive design
+- keyboard accessibility
+- practical UX decisions
 
-The project follows a modular, scalable component architecture with emphasis on maintainability, UX consistency, and accessibility.
+⸻
 
----
+Core Features
 
-# 🧩 Architecture
+1. CRUD Functionality
+   Create
+   Users can open the invoice form drawer, fill in invoice details, add items, choose a currency, and either:
 
-The application is structured into clearly separated concerns:
+- save as draft
+- or save and send as pending
+  Read
+  Users can:
+- view all invoices in the invoice list
+- click an invoice card to open the full invoice detail page
+  Update
+  Users can:
+- open an existing invoice in edit mode
+- modify any supported field
+- save a completed draft as Pending
+- keep an incomplete invoice as Draft
+  Delete
+  Users can:
+- delete an invoice from the detail page
+- confirm deletion using a dedicated confirmation modal
 
-### 📄 Pages
+⸻
 
-- InvoiceListPage – Displays all invoices and filtering controls
-- InvoiceDetailPage – Shows full invoice details and actions
+2. Draft / Pending / Paid Flow
+   Invoices support three statuses:
 
-### 🧱 Components
-
-- InvoiceFormDrawer – Handles invoice creation and editing
-- InvoiceCard – Displays invoice summary in list view
-- InvoiceStatusBadge – Visual status indicator (Draft, Pending, Paid)
-- FilterDropdown – Multi-select filter UI
-- Modal – Reusable confirmation dialog
-- UserMenu / ProfileModal – User interactions
-
-### 🧠 State Management
-
-- InvoiceContext – Handles all invoice data, filtering, and mutations
-- ThemeContext – Manages light/dark mode with persistence
-- AuthContext – Handles authentication state
-
-### 🧱 Layout
-
-- AppShell – Provides consistent layout structure (navigation + content)
-
----
-
-# ⚙️ Features
-
-## ✅ CRUD Functionality
-
-- Create invoices via a dynamic form
-- View invoices in list and detail pages
-- Edit existing invoices
-- Delete invoices with confirmation modal
-
----
-
-## 🧾 Draft & Payment Flow
-
-Invoices support three states:
-
-- Draft – partially completed invoices
-- Pending – fully valid invoices ready to be sent
-- Paid – completed invoices
-
-### Behavior:
-
-- Drafts can be edited and later submitted as Pending
+- Draft
+- Pending
+- Paid
+  Supported behavior
+- New invoices can be saved as Draft
+- Draft invoices can later be edited
+- Once all required fields are valid, a draft can be submitted as Pending
 - Pending invoices can be marked as Paid
-- Paid invoices are immutable
+- Paid invoices cannot be reverted back to Draft
+  Status visibility
+  Status is clearly shown in:
+- invoice list cards
+- invoice detail page
+- status badge styling
 
----
+⸻
 
-## 🧪 Form Validation
+3. Form Validation
+   Validation behavior differs based on intent:
+   Draft mode
+   Draft mode is intentionally more flexible:
 
-- Required fields enforced for Pending submission
-- Drafts allow partial input but still validate formats when provided
-- Validation includes:
-  - Email format
-  - Name format
-  - Address constraints
-  - Positive quantity and price
-  - At least one valid item
+- partially filled forms are allowed
+- fields that are filled still undergo format validation where appropriate
+  Pending mode
+  Pending submission is strict:
+- required fields must be present
+- invalid fields are highlighted
+- submission is blocked until all required values are valid
+  Validations include
+- client name required
+- valid email format for invoice recipient
+- project description checks
+- at least one valid invoice item
+- quantity must be positive
+- price must be positive
+- currency must be valid
+- payment terms must be valid
 
----
+⸻
 
-## 🎯 Filtering
+4. Multi-Currency Support
+   Beyond the base task, the app supports a currency dropdown in the invoice form.
+   Supported currencies
 
-- Filter invoices by:
-  - All
-  - Draft
-  - Pending
-  - Paid
-- Updates list in real-time
-- Handles empty states gracefully
+- GBP (£)
+- USD ($)
+- EUR (€)
+- NGN (₦)
+- CAD (C$)
+  Currency behavior
+- Currency is selected at invoice creation/edit time
+- Invoice totals update using the selected currency
+- Currency is reflected in:
+  _ item prices
+  _ item totals
+  _ invoice total
+  _ list view \* detail view
+  UX note
+  Price inputs use a user-friendly currency formatting approach:
+- users type raw values naturally
+- prices are formatted more cleanly through blur/finalized display behavior
+- this avoids disruptive cursor jumps while typing
 
----
+⸻
 
-## 🎨 Theming
+5. Filtering
+   Users can filter invoices by status using a checkbox-based filter component.
+   Supported filters
 
-- Light/Dark mode toggle
-- Persisted using localStorage
-- All components adapt to theme variables
+- Draft
+- Pending
+- Paid
+  Behavior
+- filtering updates the list immediately
+- multiple filters can be toggled
+- an empty state is shown when no invoice matches the selected filter(s)
 
----
+⸻
 
-## 📱 Responsive Design
+6. Light / Dark Mode
+   The application includes a global theme toggle.
+   Theme behavior
 
-Supports:
+- toggles between light and dark mode
+- preference is persisted in localStorage
+- all core surfaces, text, borders, and interactive components adapt to theme variables
+- color contrast was considered for both modes
 
-- Mobile (320px+)
-- Tablet (768px+)
-- Desktop (1024px+)
+⸻
 
-### Key considerations:
+7. Responsive Design
+   The layout adapts across:
 
-- No horizontal overflow
-- Adaptive layouts for invoice cards and detail views
-- Mobile-optimized item list and drawer behavior
+- Mobile: 320px+
+- Tablet: 768px+
+- Desktop: 1024px+
+  Responsive considerations
+- invoice cards change layout for mobile
+- invoice detail sections stack appropriately
+- drawer behavior adapts by screen size
+- actions remain usable on smaller screens
+- spacing and hierarchy are preserved
+- overflow issues were actively addressed during implementation
+  Mobile UX
+  Special effort was made to keep mobile interactions usable:
+- drawer layout adjusted for small screens
+- invoice item layout adapted for mobile detail view
+- invoice list cards restructured to match the Figma mobile pattern more closely
+- no unnecessary horizontal overflow in final intended interactions
 
----
+⸻
 
-# ♿ Accessibility
+8. Hover & Interactive States
+   Interactive states were implemented across the app, including:
 
-Accessibility was treated as a core requirement:
+- buttons
+- invoice cards
+- status filters
+- dropdown options
+- form inputs
+- delete buttons
+- theme toggle
+- user menu actions
+  This improves usability and makes interactions feel more complete and intentional.
 
-### Modals & Drawer
+⸻
 
-- Focus is trapped within active modal/drawer
-- ESC key closes modal/drawer
-- Keyboard navigation fully supported
-- Background interaction is disabled
+Authentication
+Authentication was added as a lightweight enhancement beyond the original task.
+Included auth features
 
-### Forms
+- signup
+- login
+- logout
+- protected routes
+- profile/avatar support
+- multiple local accounts stored in localStorage
+  Simplified auth behavior
+  For this project:
+- signup email validation is intentionally minimal
+- the app allows emails in lightweight forms such as xx@y
+- password length is intentionally unrestricted
+  Reason for this choice
+  Authentication was intentionally kept simple in order to:
+- prioritize the main grading criteria of the task
+- avoid overengineering a feature not central to invoice workflows
+- reduce friction for assessors testing the app quickly
+- focus implementation time on CRUD, responsiveness, accessibility, theming, and invoice logic
+  In a production version, this would be replaced with:
+- stricter email validation
+- stronger password rules
+- secure backend-based authentication
+- hashing and token/session management
 
-- Proper <label> usage
-- Error states clearly indicated
-- Focus shifts to first invalid field
+⸻
 
-### General
+Accessibility
+Accessibility was treated as a serious requirement throughout the app.
+Modal & Drawer Accessibility
+The task explicitly required that modals:
 
-- Semantic HTML used throughout
-- Sufficient color contrast (light & dark mode)
+- trap focus
+- close via ESC key
+- be keyboard navigable
+  The app addresses this with:
+- keyboard focus trapping
+- ESC support for modal/drawer closing
+- focus redirection back inside active overlays
+- background scroll locking while overlay is open
+- semantic dialog behavior using role="dialog" and aria-modal="true"
+  Forms
+- Labels are connected to inputs
+- Buttons are actual <button> elements
+- Error messages are shown for invalid fields
+- Focus is moved to the first invalid field on failed strict submission
+  General
+- semantic HTML used where appropriate
+- theme colors chosen with contrast in mind
+- focus-visible handling included for interactive components
+  Accessibility Note
+  Mobile focus trapping is harder than desktop because mobile devices do not use keyboard Tab behavior in the same way. To address this, the app uses additional focus handling logic rather than relying only on Tab key cycling.
 
----
+⸻
 
-# 🧠 Key Engineering Decisions
+Recommended Architecture Compliance
+The task recommended the following structure:
 
-## 1. Drawer as Form Container
+- Invoice List Page
+- Invoice Detail Page
+- Invoice Form Component
+- Status Badge Component
+- Filter Component
+- Theme Provider / Context
+  Current implementation
+  Pages
+- InvoiceListPage
+- InvoiceDetailPage
+- LoginPage
+- SignupPage
+  Components
+- InvoiceFormDrawer
+- InvoiceCard
+- InvoiceStatusBadge
+- FilterDropdown
+- Modal
+- ProfileModal
+- UserMenu
+- DatePicker
+- SelectMenu
+- Button
+  Providers / Context
+- InvoiceContext
+- ThemeContext
+- AuthContext
+  Layout
+- AppShell
+- MainNav
+  So yes, the project follows the recommended architecture and extends it where useful.
 
-Instead of a traditional page, the invoice form is implemented as a drawer overlay, improving UX and matching modern UI patterns.
+⸻
 
----
+State Management
+InvoiceContext
+Handles:
 
-## 2. Centralized State via Context
+- invoice storage
+- filtering
+- retrieval by id
+- create/update/delete operations
+- mark as paid logic
+  ThemeContext
+  Handles:
+- light/dark theme state
+- persistence in localStorage
+  AuthContext
+  Handles:
+- current user state
+- signup/login/logout
+- avatar updates
+- protected user session state
 
-InvoiceContext was used instead of external state libraries to:
+⸻
 
-- Keep the project lightweight
-- Maintain clarity and control over logic
-- Simplify data flow
+Data Persistence
+This project uses localStorage for persistence.
+Persisted data includes
 
----
+- invoices
+- current theme
+- saved auth accounts
+- current logged-in session
+  Why localStorage
+  This was chosen because:
+- it satisfies the task requirements
+- it keeps the app fully functional without backend setup
+- it supports quick reviewer testing
+- it allows the app to remain React-only as requested
 
-## 3. Scroll Locking System
+⸻
 
-A custom hook (useLockBodyScroll) ensures:
+Key Engineering Decisions
 
-- Background content cannot scroll when modal/drawer is open
-- Mobile UX matches expected native behavior
+1. Invoice Form as a Drawer
+   Instead of navigating to a separate page for editing/creating, the invoice form uses a drawer overlay. This keeps users closer to context and better matches the design style.
+2. Centralized Invoice Logic
+   Invoice data and mutations are handled through a dedicated context rather than scattered page-level state. This makes the system easier to reason about and reuse.
+3. Flexible Draft vs Strict Pending Validation
+   Drafts are intentionally more forgiving, while pending invoices require stricter validation. This matches real-world expectations better than applying the same validation intensity to both flows.
+4. Multi-Currency Enhancement
+   Currency selection was introduced as an additional improvement to make the app more flexible and realistic.
+5. Scroll Lock Hook
+   A reusable body scroll lock hook was introduced to improve overlay behavior and prevent background scrolling under active modals or drawers.
 
----
+⸻
 
-## 4. Validation Strategy
+Trade-offs
 
-- Draft mode: flexible validation
-- Pending mode: strict validation
+1. Simplified Authentication
+   Authentication is intentionally lightweight and front-end only. This keeps the app easy to test but is not production-grade security.
+2. Large Form Component
+   InvoiceFormDrawer contains a lot of logic:
 
-This balances user flexibility with data integrity
+- validation
+- item handling
+- formatting
+- status flow
+  This improved delivery speed, though a larger production system would split this further into smaller hooks/components.
 
----
-
-# 🔐 Authentication (Simplified)
-
-For the purpose of this project:
-
-- Email format: xx@y (minimal validation)
-- Password: any length
-
-### ❗ Reason:
-
-Authentication was intentionally simplified to:
-
-- Focus on core application features (CRUD, UI, UX, state)
-- Avoid overengineering authentication logic not required by the task
-- Ensure faster testing and smoother user flow during evaluation
-
-In a production system, stricter validation and backend authentication would be implemented.
-
----
-
-# 💾 Data Persistence
-
-Invoices and user state are persisted using:
-
-- localStorage
-
-This ensures:
-
-- Data survives page reloads
-- No backend dependency required for the challenge
-
----
-
-# ⚠️ Trade-offs
-
-### 1. Large Component Size
-
-InvoiceFormDrawer contains significant logic (validation, item management)
-
-➡️ Trade-off: faster development vs deeper abstraction
-
----
-
-### 2. Multiple Modal Systems
-
-Separate implementations exist for:
+3. Separate Overlay Systems
+   The app currently has:
 
 - Modal
 - Drawer
 - Profile modal
+  These behave similarly but are still separate implementations. A future refactor could unify them into a more generic overlay system.
 
-➡️ Ideal solution would unify these into a single system
+4. localStorage Instead of Backend
+   This improves simplicity and satisfies the challenge, but a backend would be preferable for:
 
----
+- user management
+- shared persistence
+- secure auth
+- multi-device continuity
 
-### 3. Context Scope
+⸻
 
-InvoiceContext handles multiple responsibilities (state + filtering + mutations)
+Improvements Beyond Requirements
+The project includes some practical additions beyond the base task:
 
-➡️ Acceptable for this scale, but would be split in larger applications
+- lightweight authentication
+- multiple local accounts
+- avatar/profile support
+- multi-currency selection
+- reusable modal system
+- reusable custom scroll lock hook
+- improved keyboard/focus behavior for overlays
+- custom mobile invoice item presentation
 
----
+⸻
 
-# 🚀 Possible Improvements
+Possible Future Improvements
 
-- Extract form logic into smaller reusable hooks
-- Introduce a unified modal/drawer system
-- Add backend (Node.js / API routes) for real persistence
-- Implement stricter authentication
-- Add unit and integration tests
-- Improve performance with memoization for large datasets
+- extract invoice form logic into reusable hooks
+- unify modal and drawer logic into one overlay system
+- stricter auth validation and backend auth
+- add tests (unit + integration)
+- use IndexedDB or backend persistence
+- add invoice search
+- export invoices as PDF
+- improve profile management
+- add animation polish and motion consistency
 
----
+⸻
 
-# 🛠️ Setup Instructions
+Tech Stack
 
-bash # Clone repo git clone <https://github.com/Precious-Odion/invoice-app> # Navigate into project cd invoice-app # Install dependencies npm install # Run development server npm run dev
+- React
+- TypeScript
+- React Router
+- Context API
+- localStorage
+- CSS
 
----
+⸻
 
-# 📊 Final Notes
+Setup Instructions
 
-This project prioritizes:
+1. Clone the repository
+   git clone https://github.com/Precious-Odion/invoice-app
+2. Go into the project folder
+   cd invoice-app
+3. Install dependencies
+   npm install
+4. Start development server
+   npm run dev
+5. Build for production
+   npm run build
 
-- Clean architecture
-- Accessibility
-- Responsive design
-- Real-world UX patterns
+⸻
 
-While some simplifications were made (e.g., authentication), they were intentional to focus on delivering a high-quality, functional, and user-friendly invoice management system.
+Project Highlights for Reviewers
+This project focuses on the criteria most relevant to the task:
 
----
+- working CRUD behavior
+- accurate status flow
+- responsive invoice layouts
+- filter functionality
+- persistent theming
+- local persistence
+- accessibility-minded overlays
+- maintainable component structure
+  Where simplifications were made, they were intentional and documented.
 
-# 🙌 Acknowledgements
+⸻
 
-- Figma design reference provided in task
-- Built with React + TypeS
+Acknowledgements
+
+- Figma invoice design reference provided in the task
+- Built with React and TypeScript
