@@ -71,11 +71,19 @@
   border-radius: 50%;
   background-color: #ffffff;
   color: var(--color-purple-primary);
-  display: grid;
-  place-items: center;
-  font-size: 22px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.button__icon svg {
+  width: 12px;
+  height: 12px;
+  display: block;
 }
 
 .button__label {

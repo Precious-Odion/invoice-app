@@ -26,7 +26,7 @@ interface AuthContextValue {
   updateAvatar: (avatar: string) => void;
 }
 
-const AUTH_USER_KEY = "invoice-app-auth-user";
+const AUTH_USERS_KEY = "invoice-app-auth-users";
 const AUTH_SESSION_KEY = "invoice-app-auth-session";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -66,32 +66,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const normalizedEmail = payload.email.trim().toLowerCase();
 
-    const existingRaw = window.localStorage.getItem(AUTH_USER_KEY);
-    const existingUser = existingRaw
-      ? (JSON.parse(existingRaw) as AuthUser)
-      : null;
+    const existingRaw = window.localStorage.getItem(AUTH_USERS_KEY);
+    const existingUsers = existingRaw
+      ? (JSON.parse(existingRaw) as AuthUser[])
+      : [];
 
-    if (
-      existingUser &&
-      existingUser.email.trim().toLowerCase() === normalizedEmail
-    ) {
+    const emailExists = existingUsers.some(
+      (user) => user.email.trim().toLowerCase() === normalizedEmail,
+    );
+
+    if (emailExists) {
       return {
         success: false,
         message: "An account with this email already exists.",
       };
     }
 
-    const normalizedPayload = {
+    const newUser: AuthUser = {
       ...payload,
       email: normalizedEmail,
     };
 
-    window.localStorage.setItem(
-      AUTH_USER_KEY,
-      JSON.stringify(normalizedPayload),
-    );
+    const updatedUsers = [...existingUsers, newUser];
 
-    setUser(normalizedPayload);
+    window.localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(updatedUsers));
+    setUser(newUser);
 
     return { success: true };
   };
@@ -101,7 +100,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return { success: false, message: "Login unavailable" };
     }
 
-    const existingRaw = window.localStorage.getItem(AUTH_USER_KEY);
+    const existingRaw = window.localStorage.getItem(AUTH_USERS_KEY);
 
     if (!existingRaw) {
       return {
@@ -110,19 +109,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
       };
     }
 
-    const existingUser = JSON.parse(existingRaw) as AuthUser;
+    const existingUsers = JSON.parse(existingRaw) as AuthUser[];
     const normalizedEmail = payload.email.trim().toLowerCase();
 
-    if (existingUser.email.trim().toLowerCase() !== normalizedEmail) {
+    const matchedUser = existingUsers.find(
+      (user) => user.email.trim().toLowerCase() === normalizedEmail,
+    );
+
+    if (!matchedUser) {
       return { success: false, message: "Email not found." };
     }
 
-    if (existingUser.password !== payload.password) {
+    if (matchedUser.password !== payload.password) {
       return { success: false, message: "Incorrect password." };
     }
 
-    setUser(existingUser);
-
+    setUser(matchedUser);
     return { success: true };
   };
 
@@ -135,7 +137,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const updatedUser = { ...user, avatar };
     setUser(updatedUser);
-    window.localStorage.setItem(AUTH_USER_KEY, JSON.stringify(updatedUser));
+    window.localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(updatedUser));
   };
 
   const value = useMemo(
