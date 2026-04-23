@@ -283,7 +283,7 @@ body:not(.dark) .invoice-items__row input {
   }
 
   .invoice-drawer__scroll {
-    padding: 32px 24px 140px;
+    padding: 32px 24px 240px;
   }
 
   .invoice-items {
