@@ -321,7 +321,7 @@ body:not(.dark) .invoice-items__row input {
   .invoice-items__header,
   .invoice-items__row {
     display: grid;
-    grid-template-columns: minmax(96px, 1fr) 36px 64px 64px 64px;
+    grid-template-columns: minmax(88px, 1fr) 36px 60px 60px 24px;
     gap: 8px;
     width: 100%;
     align-items: center;
@@ -351,10 +351,6 @@ body:not(.dark) .invoice-items__row input {
     font-size: 13px;
   }
 
-  .invoice-items__delete {
-    justify-self: end;
-  }
-
   .invoice-drawer__footer {
     position: fixed;
     left: 0;
@@ -382,8 +378,8 @@ body:not(.dark) .invoice-items__row input {
 }
 
 .invoice-items__delete {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   display: grid;
   justify-self: end;
   place-items: center;
@@ -392,11 +388,12 @@ body:not(.dark) .invoice-items__row input {
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
 }
 
 .invoice-items__delete-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
 }
 
 .invoice-items__delete:hover {
