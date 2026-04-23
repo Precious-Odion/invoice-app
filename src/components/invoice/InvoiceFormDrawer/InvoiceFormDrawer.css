@@ -312,14 +312,18 @@ body:not(.dark) .invoice-items__row input {
   }
 
   .invoice-items {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
   }
 
   .invoice-items__header,
   .invoice-items__row {
     display: grid;
-    grid-template-columns: minmax(120px, 1fr) 44px 72px 72px 20px;
-    gap: 12px;
+    grid-template-columns: minmax(96px, 1fr) 36px 64px 64px 64px;
+    gap: 8px;
+    width: 100%;
     align-items: center;
   }
 
@@ -329,7 +333,7 @@ body:not(.dark) .invoice-items__row input {
   }
 
   .invoice-items__row {
-    padding-bottom: 16px;
+    padding-bottom: 12px;
   }
 
   .invoice-items__row p {
@@ -337,10 +341,14 @@ body:not(.dark) .invoice-items__row input {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
   }
 
   .invoice-items__row input {
     min-width: 0;
+    padding: 0 10px;
+    font-size: 13px;
   }
 
   .invoice-items__delete {
@@ -374,9 +382,10 @@ body:not(.dark) .invoice-items__row input {
 }
 
 .invoice-items__delete {
-  width: 32px;
-  height: 32px;
+  width: 16px;
+  height: 16px;
   display: grid;
+  justify-self: end;
   place-items: center;
   background: transparent;
   border: none;
@@ -386,8 +395,8 @@ body:not(.dark) .invoice-items__row input {
 }
 
 .invoice-items__delete-icon {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
 }
 
 .invoice-items__delete:hover {
