@@ -6,13 +6,13 @@ A fully responsive Invoice Management Application built with React, implementing
 
 ## 🚀 Live Demo
 
-(Add your deployed link here — Vercel / Netlify)
+https://invoice-app-production-f957.up.railway.app/
 
 ---
 
 ## 📦 Repository
 
-(Add your GitHub repo link here)
+https://github.com/Precious-Odion/invoice-app
 
 ---
 
@@ -272,7 +272,7 @@ InvoiceContext handles multiple responsibilities (state + filtering + mutations)
 
 # 🛠️ Setup Instructions
 
-bash # Clone repo git clone <your-repo-url> # Navigate into project cd invoice-app # Install dependencies npm install # Run development server npm run dev
+bash # Clone repo git clone <https://github.com/Precious-Odion/invoice-app> # Navigate into project cd invoice-app # Install dependencies npm install # Run development server npm run dev
 
 ---
 

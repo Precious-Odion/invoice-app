@@ -24,6 +24,16 @@
   margin-bottom: 16px;
 }
 
+.modal-overlay,
+.invoice-drawer {
+  touch-action: none;
+}
+
+.modal,
+.invoice-drawer__panel {
+  touch-action: auto;
+}
+
 .modal__body {
   color: var(--color-text-secondary);
   font-size: 13px;

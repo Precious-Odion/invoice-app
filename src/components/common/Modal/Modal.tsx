@@ -27,6 +27,8 @@ export function Modal({ title, children, actions, onClose }: ModalProps) {
       return;
     }
 
+    document.body.setAttribute("aria-hidden", "true");
+
     const focusableElements = modalElement.querySelectorAll<
       | HTMLButtonElement
       | HTMLAnchorElement
@@ -37,8 +39,15 @@ export function Modal({ title, children, actions, onClose }: ModalProps) {
       'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
     );
 
+    if (focusableElements.length === 0) {
+      modalElement.focus();
+      return;
+    }
+
     const firstFocusable = focusableElements[0];
-    firstFocusable?.focus();
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    firstFocusable.focus();
 
     const handleKeyDown = (event: KeyboardEvent | globalThis.KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -46,32 +55,41 @@ export function Modal({ title, children, actions, onClose }: ModalProps) {
         return;
       }
 
-      if (event.key !== "Tab" || focusableElements.length === 0) {
+      if (event.key !== "Tab") {
         return;
       }
 
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
       const activeElement = document.activeElement;
 
       if (event.shiftKey) {
-        if (activeElement === firstElement) {
+        if (activeElement === firstFocusable) {
           event.preventDefault();
-          lastElement.focus();
+          lastFocusable.focus();
         }
         return;
       }
 
-      if (activeElement === lastElement) {
+      if (activeElement === lastFocusable) {
         event.preventDefault();
-        firstElement.focus();
+        firstFocusable.focus();
+      }
+    };
+
+    const handleFocusIn = (event: FocusEvent) => {
+      if (!modalElement.contains(event.target as Node)) {
+        event.stopPropagation();
+        firstFocusable.focus();
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("focusin", handleFocusIn);
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("focusin", handleFocusIn);
+
+      document.body.removeAttribute("aria-hidden");
     };
   }, [onClose]);
 
@@ -83,6 +101,7 @@ export function Modal({ title, children, actions, onClose }: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
       >
         <h2 id={titleId} className="modal__title">

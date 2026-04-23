@@ -186,7 +186,6 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
-
   useEffect(() => {
     const panel = document.querySelector(".invoice-drawer__panel");
 
@@ -196,12 +195,20 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     );
 
+    if (focusable.length === 0) return;
+
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
 
-    first?.focus();
+    // Initial focus
+    first.focus();
 
-    const handleTab = (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeDrawer();
+        return;
+      }
+
       if (e.key !== "Tab") return;
 
       if (e.shiftKey) {
@@ -217,8 +224,20 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       }
     };
 
-    document.addEventListener("keydown", handleTab);
-    return () => document.removeEventListener("keydown", handleTab);
+    const handleFocusIn = (e: FocusEvent) => {
+      if (!panel.contains(e.target as Node)) {
+        e.stopPropagation();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("focusin", handleFocusIn);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("focusin", handleFocusIn);
+    };
   }, []);
 
   const isEdit = mode === "edit";
