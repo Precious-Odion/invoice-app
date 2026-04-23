@@ -4,10 +4,12 @@
   right: 0;
   bottom: 0;
   left: 103px;
-  z-index: 100;
+  z-index: 150;
   background: rgba(12, 14, 22, 0.45);
   display: flex;
   align-items: stretch;
+  overscroll-behavior: contain;
+  touch-action: none;
 }
 
 .invoice-drawer__panel {
@@ -28,6 +30,7 @@
   padding: 56px 48px 32px 56px;
   scrollbar-width: thin;
   scrollbar-color: #494e6e transparent;
+  touch-action: pan-y;
 }
 
 .invoice-drawer__scroll::-webkit-scrollbar {

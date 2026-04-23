@@ -5,6 +5,7 @@ import { DatePicker } from "../../common/DatePicker/DatePicker";
 import { SelectMenu } from "../../common/SelectMenu/SelectMenu";
 import type { InvoiceFormValues, InvoiceItem } from "../../../types/invoice";
 import { Button } from "../../common/Button/Button";
+import { useLockBodyScroll } from "../../../hooks/useLockBodyScroll";
 import "./InvoiceFormDrawer.css";
 
 interface InvoiceFormDrawerProps {
@@ -122,6 +123,8 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
   const { getInvoiceById, createInvoice, updateInvoice } = useInvoices();
   const invoice = mode === "edit" && id ? getInvoiceById(id) : undefined;
 
+  useLockBodyScroll(true);
+
   const initialValues = useMemo<InvoiceFormValues>(() => {
     if (!invoice) {
       return createInitialValues();
@@ -172,6 +175,51 @@ export function InvoiceFormDrawer({ mode }: InvoiceFormDrawerProps) {
       return next;
     });
   }, [formValues.items]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeDrawer();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    const panel = document.querySelector(".invoice-drawer__panel");
+
+    if (!panel) return;
+
+    const focusable = panel.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    first?.focus();
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleTab);
+    return () => document.removeEventListener("keydown", handleTab);
+  }, []);
 
   const isEdit = mode === "edit";
 

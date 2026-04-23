@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import "./Modal.css";
+import { useLockBodyScroll } from "../../../hooks/useLockBodyScroll";
 
 interface ModalProps {
   title: string;
@@ -17,6 +18,7 @@ interface ModalProps {
 export function Modal({ title, children, actions, onClose }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  useLockBodyScroll(true);
 
   useEffect(() => {
     const modalElement = modalRef.current;
