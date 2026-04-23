@@ -6,7 +6,7 @@
   place-items: center;
   padding: 24px;
   z-index: 250;
-  overscroll-behavior: contain;
+  overscroll-behavior: none;
   touch-action: none;
 }
 
@@ -19,6 +19,7 @@
   padding: 28px;
   outline: none;
   touch-action: auto;
+  overscroll-behavior: contain;
 }
 
 .profile-modal__header {

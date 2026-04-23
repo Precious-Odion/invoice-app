@@ -6,7 +6,7 @@
   place-items: center;
   padding: 24px;
   z-index: 200;
-  overscroll-behavior: contain;
+  overscroll-behavior: none;
   touch-action: none;
 }
 
@@ -19,6 +19,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   outline: none;
   touch-action: auto;
+  overscroll-behavior: contain;
 }
 
 .modal__title {

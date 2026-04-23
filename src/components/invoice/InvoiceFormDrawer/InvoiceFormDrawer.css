@@ -8,7 +8,7 @@
   background: rgba(12, 14, 22, 0.45);
   display: flex;
   align-items: stretch;
-  overscroll-behavior: contain;
+  overscroll-behavior: none;
   touch-action: none;
 }
 
@@ -23,6 +23,7 @@
   overflow: hidden;
   position: relative;
   touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .invoice-drawer__scroll {
@@ -32,6 +33,7 @@
   scrollbar-width: thin;
   scrollbar-color: #494e6e transparent;
   touch-action: pan-y;
+  overscroll-behavior: contain;
 }
 
 .invoice-drawer__scroll::-webkit-scrollbar {
